@@ -1,0 +1,48 @@
+{
+ "actions": [],
+ "autoname": "field:segmentation_status",
+ "creation": "2021-07-28 20:25:25.809926",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "segmentation_status"
+ ],
+ "fields": [
+  {
+   "fieldname": "segmentation_status",
+   "fieldtype": "Data",
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "label": "Segmentation Status",
+   "reqd": 1,
+   "unique": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2021-08-29 10:04:09.056885",
+ "modified_by": "Administrator",
+ "module": "Gia Events",
+ "name": "Segmentation No 2 Detail",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "select": 1,
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

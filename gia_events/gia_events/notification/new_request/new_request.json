@@ -1,0 +1,28 @@
+{
+ "attach_print": 0,
+ "channel": "System Notification",
+ "condition": "",
+ "creation": "2022-07-11 07:46:09.168326",
+ "days_in_advance": 0,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "Request",
+ "enabled": 1,
+ "event": "New",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "<h3>{{_(\"Event Request\")}}</h3>\n\n<p>{{ _(\"New event request created :- \") }} {{ doc.name }}</p>",
+ "modified": "2022-07-18 11:45:00.609723",
+ "modified_by": "Administrator",
+ "module": "Gia Events",
+ "name": "New Request",
+ "owner": "Administrator",
+ "recipients": [
+  {
+   "receiver_by_role": "Administrator"
+  }
+ ],
+ "send_system_notification": 1,
+ "send_to_all_assignees": 0,
+ "subject": "New Event Request: {{ doc.name }}"
+}

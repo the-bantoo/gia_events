@@ -1,0 +1,28 @@
+{
+ "attach_print": 0,
+ "channel": "System Notification",
+ "creation": "2022-07-25 19:26:03.776998",
+ "days_in_advance": 0,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "Request",
+ "enabled": 0,
+ "event": "Value Change",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "<h3>{{_(\"New Follow Up Assignment\")}}</h3>\n\n<p>{{ _(\"New follow up task assigned to the :- \") }} {{ doc.name }}</p>",
+ "modified": "2022-07-25 20:13:44.720395",
+ "modified_by": "Administrator",
+ "module": "Gia Events",
+ "name": "New Follow Up Assignment",
+ "owner": "Administrator",
+ "recipients": [
+  {
+   "receiver_by_document_field": "next_contact_by"
+  }
+ ],
+ "send_system_notification": 0,
+ "send_to_all_assignees": 0,
+ "subject": "New Responsible Person {{ doc.name }}",
+ "value_changed": "next_contact_by"
+}

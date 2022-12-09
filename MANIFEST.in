@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include gia_events *.css
+recursive-include gia_events *.csv
+recursive-include gia_events *.html
+recursive-include gia_events *.ico
+recursive-include gia_events *.js
+recursive-include gia_events *.json
+recursive-include gia_events *.md
+recursive-include gia_events *.png
+recursive-include gia_events *.py
+recursive-include gia_events *.svg
+recursive-include gia_events *.txt
+recursive-exclude gia_events *.pyc

@@ -1,0 +1,85 @@
+{
+ "actions": [],
+ "autoname": "field:caller_number",
+ "creation": "2021-10-11 12:56:48.844749",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "caller_number",
+  "date_created",
+  "duration",
+  "status",
+  "start_time",
+  "end_time"
+ ],
+ "fields": [
+  {
+   "fieldname": "caller_number",
+   "fieldtype": "Data",
+   "label": "Caller Number",
+   "unique": 1
+  },
+  {
+   "fieldname": "date_created",
+   "fieldtype": "Data",
+   "label": "Date Created"
+  },
+  {
+   "fieldname": "duration",
+   "fieldtype": "Data",
+   "label": "Duration"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Data",
+   "label": "Status"
+  },
+  {
+   "fieldname": "start_time",
+   "fieldtype": "Data",
+   "label": "Start Time"
+  },
+  {
+   "fieldname": "end_time",
+   "fieldtype": "Data",
+   "label": "End Time"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2021-10-14 15:35:25.163835",
+ "modified_by": "Administrator",
+ "module": "Gia Events",
+ "name": "Call Log Twilio",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Guest",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

@@ -1,0 +1,23 @@
+{
+ "color": "#39E4A5",
+ "creation": "2021-10-10 11:46:49.188286",
+ "docstatus": 0,
+ "doctype": "Number Card",
+ "filters_json": "{}",
+ "function": "Count",
+ "idx": 0,
+ "is_public": 0,
+ "is_standard": 1,
+ "label": "Sum of Speakers",
+ "modified": "2021-10-10 11:48:43.635562",
+ "modified_by": "Administrator",
+ "module": "Gia Events",
+ "name": "Sum of Speakers",
+ "owner": "Administrator",
+ "report_field": "speakers",
+ "report_function": "Sum",
+ "report_name": "Event Attendance",
+ "show_percentage_stats": 1,
+ "stats_time_interval": "Daily",
+ "type": "Report"
+}

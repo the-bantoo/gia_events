@@ -1,0 +1,48 @@
+{
+ "actions": [],
+ "creation": "2022-01-04 16:30:29.617761",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "sponsor_name",
+  "sponsor_id",
+  "sponsorship_type"
+ ],
+ "fields": [
+  {
+   "fetch_from": "sponsor_id.sponsor_name",
+   "fieldname": "sponsor_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Sponsor Name"
+  },
+  {
+   "fieldname": "sponsorship_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Type Of Sponsorship",
+   "options": "\nFinancial Sponsorship\nIn-Kind Sponsorship\nMedia Sponsorship\nPromotional Sponsorship\nOther"
+  },
+  {
+   "fieldname": "sponsor_id",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Email Address",
+   "options": "Event Sponsor",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2022-01-12 21:42:32.797519",
+ "modified_by": "Administrator",
+ "module": "Gia Events",
+ "name": "Sponsor Table",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

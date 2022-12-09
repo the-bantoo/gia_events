@@ -1,0 +1,54 @@
+{
+ "actions": [],
+ "creation": "2021-12-11 09:29:37.244366",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "link_id",
+  "original_url",
+  "clicked",
+  "click_rate"
+ ],
+ "fields": [
+  {
+   "fieldname": "link_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Link ID",
+   "no_copy": 1
+  },
+  {
+   "fieldname": "original_url",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Original URL",
+   "no_copy": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "clicked",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Clicked"
+  },
+  {
+   "fieldname": "click_rate",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Click Rate"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2021-12-13 09:14:53.778324",
+ "modified_by": "Administrator",
+ "module": "Gia Events",
+ "name": "Email Links",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

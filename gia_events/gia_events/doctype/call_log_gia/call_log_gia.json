@@ -1,0 +1,88 @@
+{
+ "actions": [],
+ "autoname": "field:caller_number",
+ "creation": "2021-10-14 16:44:59.046723",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "call_log_html",
+  "caller_number",
+  "date_created",
+  "duration",
+  "status",
+  "start_time",
+  "end_time"
+ ],
+ "fields": [
+  {
+   "fieldname": "caller_number",
+   "fieldtype": "Data",
+   "label": "Caller Number"
+  },
+  {
+   "fieldname": "date_created",
+   "fieldtype": "Data",
+   "label": "Date Created"
+  },
+  {
+   "fieldname": "duration",
+   "fieldtype": "Data",
+   "label": "Duration"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Data",
+   "label": "Status"
+  },
+  {
+   "fieldname": "start_time",
+   "fieldtype": "Data",
+   "label": "Start Time"
+  },
+  {
+   "fieldname": "end_time",
+   "fieldtype": "Data",
+   "label": "End Time"
+  },
+  {
+   "fieldname": "call_log_html",
+   "fieldtype": "HTML",
+   "label": "Call Log HTML",
+   "options": "<table class=\"table table-striped\">\n<thead>\n    <tr>\n      <th scope=\"col\">From</th>\n      <th scope=\"col\">To</th>\n      <th scope=\"col\">Duration</th>\n      <th scope=\"col\">Status</th>\n    </tr>\n  </thead>\n  <tbody id=\"logs\">\n\n  </tbody>\n</table>"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2021-10-14 17:47:41.903104",
+ "modified_by": "Administrator",
+ "module": "Gia Events",
+ "name": "Call Log GIA",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Guest",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

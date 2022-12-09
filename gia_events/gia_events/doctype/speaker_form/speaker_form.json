@@ -1,0 +1,186 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "SPKR-REG-.####",
+ "creation": "2022-01-04 16:30:28.597463",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "introduction",
+  "section_break_2",
+  "full_name",
+  "job_title",
+  "event_name",
+  "column_break_3",
+  "company",
+  "interested_session",
+  "contact_information_section",
+  "email_address",
+  "corporate_number",
+  "column_break_9",
+  "phone_number",
+  "country",
+  "information_for_the__brochure_section",
+  "speaker_bio",
+  "topic",
+  "bullet_points",
+  "profile_image",
+  "ts_and_cs",
+  "html_18",
+  "data_consent",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "full_name",
+   "fieldtype": "Data",
+   "label": "Full Name"
+  },
+  {
+   "fieldname": "job_title",
+   "fieldtype": "Data",
+   "label": "Job Title"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Data",
+   "label": "Company"
+  },
+  {
+   "fieldname": "contact_information_section",
+   "fieldtype": "Section Break",
+   "label": "Contact Information"
+  },
+  {
+   "fieldname": "email_address",
+   "fieldtype": "Data",
+   "label": "Email Address",
+   "options": "Email"
+  },
+  {
+   "fieldname": "country",
+   "fieldtype": "Data",
+   "label": "Country"
+  },
+  {
+   "fieldname": "information_for_the__brochure_section",
+   "fieldtype": "Section Break",
+   "label": "Information For The  Brochure"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_9",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "ts_and_cs",
+   "fieldtype": "Section Break",
+   "label": "Terms & Conditions Acceptance"
+  },
+  {
+   "fieldname": "html_18",
+   "fieldtype": "HTML",
+   "options": "<p>In case of inability to attend the conference the speaker agrees to inform the conference producer about the cancellation in writing by email, mail, or fax not less than eight (8) weeks before the conference (by December 15, 2021). In case of such cancellation, the speaker will cooperate with event organizers to propose replacing a speaker from the same company he/she represents to make a presentation at the conference on an agreed topic.\n<br>\n<br>\n* Privacy policy:\n<br>The personal information you provide is being collected for legitimate business purposes associated with the IDTC Summit. No contact details will be shared with Third parties without your prior approval. By signing this form you agree to have your session recorded and distributed between Summit attendees.\nFor more information please visit <a href=\"https://giaglobalgroup.com/privacy\" target=\"_blank\" title=\"Privacy Statement\"><u>GIA Global Group Privacy</u>.</a></p>"
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "interested_session",
+   "fieldtype": "Data",
+   "label": "Interested In Session"
+  },
+  {
+   "fieldname": "corporate_number",
+   "fieldtype": "Data",
+   "label": "Corporate Phone Number",
+   "options": "Phone"
+  },
+  {
+   "fieldname": "phone_number",
+   "fieldtype": "Data",
+   "label": "Mobile Phone Number",
+   "options": "Phone"
+  },
+  {
+   "fieldname": "speaker_bio",
+   "fieldtype": "Small Text",
+   "label": "Biography (120-150 words)"
+  },
+  {
+   "fieldname": "topic",
+   "fieldtype": "Data",
+   "label": "Presentation title (if you will be moderating one of the sessions, please mention the name of this session here)"
+  },
+  {
+   "fieldname": "bullet_points",
+   "fieldtype": "Small Text",
+   "label": "3-6 bullet points/lines, that describe your presentation"
+  },
+  {
+   "fieldname": "profile_image",
+   "fieldtype": "Attach Image",
+   "label": "Please upload your good quality portrait photo here (minimum 320 wide x 480 tall)"
+  },
+  {
+   "fieldname": "event_name",
+   "fieldtype": "Link",
+   "label": "Event Name",
+   "options": "Events"
+  },
+  {
+   "default": "0",
+   "fieldname": "data_consent",
+   "fieldtype": "Check",
+   "label": "I consent that GIA Global Group can use my data according to the Privacy Policy"
+  },
+  {
+   "fieldname": "introduction",
+   "fieldtype": "HTML",
+   "options": "<h3>GENERAL INFORMATION</h3>\n<p>Information from this form will be used in our event brochure, meeting platform and on the event website.\n</p>\n<ul>\n<li>Please note that we use a company logo in our PDF brochure, which is available upon request on our event website. If you do not wish a logo to be used, please write in breaks next to the company name \"do not use the logo\".</li>\n</ul>"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Speaker Form",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "image_field": "profile_image",
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2022-07-22 11:38:51.455630",
+ "modified_by": "Administrator",
+ "module": "Gia Events",
+ "name": "Speaker Form",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "title_field": "full_name",
+ "track_changes": 1,
+ "track_seen": 1
+}

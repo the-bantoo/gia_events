@@ -1,0 +1,30 @@
+{
+ "attach_print": 0,
+ "channel": "Email",
+ "creation": "2021-08-04 12:21:33.455836",
+ "days_in_advance": 0,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "Lead",
+ "enabled": 1,
+ "event": "Value Change",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "{{ doc.contact_by }} has been assigned to the {{ doc.name }}",
+ "modified": "2021-08-04 12:21:33.455836",
+ "modified_by": "support@thebantoo.com",
+ "module": "Gia Events",
+ "name": "New Responsible Person",
+ "owner": "support@thebantoo.com",
+ "recipients": [
+  {
+   "receiver_by_role": "SMM"
+  }
+ ],
+ "send_system_notification": 1,
+ "send_to_all_assignees": 0,
+ "sender": "GIA Events",
+ "sender_email": "erpnextafrica@gmail.com",
+ "subject": "New Responsible Person: {{ doc.name }}",
+ "value_changed": "contact_by"
+}

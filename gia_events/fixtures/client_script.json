@@ -1,0 +1,35 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Lead",
+  "enabled": 1,
+  "modified": "2022-03-02 19:38:11.117780",
+  "module": null,
+  "name": "Lead-Form",
+  "script": "frappe.ui.form.on('Lead', {\n\tfirst_name(frm) {\n\t    //First and last name is undefined so set full name to empty string\n\t    if(frm.doc.first_name === undefined && frm.doc.last_name === undefined){\n\t        frm.set_value('lead_name', \"\");\n\t    }\n\t    \n\t    //First name is set and last name is not, set full name to first name only\n\t    else if(frm.doc.first_name !== undefined && frm.doc.last_name === undefined){\n\t        frm.set_value('lead_name', frm.doc.first_name);\n\t    }\n\t    \n\t    //Last name is set and first name is not, so det full name to last name\n\t    else if(frm.doc.first_name === undefined && frm.doc.last_name !== undefined){\n\t        frm.set_value('lead_name', frm.doc.last_name);\n\t    }\n\t    \n\t    //Both first and last names are set so set full name to first and last name\n\t    else{\n\t        frm.set_value('lead_name', frm.doc.first_name + \" \" + frm.doc.last_name);\n\t    }\n\t    /*let person_name = frm.doc.first_name + \" \" + frm.doc.last_name;\n\t\tfrm.set_value('lead_name', person_name);*/\n\t},\n\t\n\tlast_name(frm) {\n\t    //First and last name is undefined so set full name to empty string\n\t    if(frm.doc.first_name === undefined && frm.doc.last_name === undefined){\n\t        frm.set_value('lead_name', \"\");\n\t    }\n\t    \n\t    //First name is set and last name is not, set full name to first name only\n\t    else if(frm.doc.first_name !== undefined && frm.doc.last_name === undefined){\n\t        frm.set_value('lead_name', frm.doc.first_name);\n\t    }\n\t    \n\t    //Last name is set and first name is not, so det full name to last name\n\t    else if(frm.doc.first_name === undefined && frm.doc.last_name !== undefined){\n\t        frm.set_value('lead_name', frm.doc.last_name);\n\t    }\n\t    \n\t    //Both first and last names are set so set full name to first and last name\n\t    else{\n\t        frm.set_value('lead_name', frm.doc.first_name + \" \" + frm.doc.last_name);\n\t    }\n\t    /*let person_name = frm.doc.first_name + \" \" + frm.doc.last_name;\n\t\tfrm.set_value('lead_name', person_name);*/\n\t}\n});\n\n\nfrappe.ui.form.on('Lead', {\n\trefresh: function(frm) {\n        frm.add_custom_button(__(\"Call\"), function(){\n            //console.log(\"Call to \" + $(\"#phone\").val());\n            \n            if($(\"#phone\").val() !== \"...\"){\n                frappe.call({\n                    method: \"gia_events.api.make_call\",\n                    args: {\n                        \"to_number\": frm.doc.lead_number,\n                        \"logged_in_user\": frappe.session.user\n                    }\n                });\n\t\t    }\n        });\n        \n        /*$(\"#callbtn\").click(function(){\n            console.log(\"Call to \" + $(\"#phone\").val())\n            if($(\"#phone\").val() !== \"...\"){\n                frappe.call({\n                    method: \"gia_events.api.make_call\",\n                    args: {\"to_number\": frm.doc.mobile_number}\n                })\n\t\t    }\n        })*/\n        console.log(frm.doc.lead_number);\n\t}\n});",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Call Log GIA",
+  "enabled": 1,
+  "modified": "2021-10-14 18:16:20.369872",
+  "module": null,
+  "name": "Call Log GIA-Form",
+  "script": "frappe.ui.form.on('Call Log GIA', {\n\trefresh(frm) {\n\t\tfrappe.call({\n\t\t    method: \"gia_events.api.call_logs\",\n\t\t    callback: (r) => {\n\t\t        console.log(r.message)\n\t\t        $.each(r.message, function(index, log){\n\t\t            $(\"#logs\").append(\"<tr><td>\" + log.from_ + \"</td><td>\" + log.to + \"</td><td>\" + log.duration + \"</td><td>\" + log.status + \"</td></tr>\")\n\t\t        })\n\t\t    }\n\t\t    })\n\t}\n})",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Newsletter",
+  "enabled": 1,
+  "modified": "2022-02-21 14:27:40.785144",
+  "module": null,
+  "name": "Newsletter-Form",
+  "script": "frappe.ui.form.on('Newsletter Email Group', {\n\temail_group(frm, cdt, cdn) {\n\t    let row = frappe.get_doc(cdt, cdn);\n\t\tfrappe.call({\n\t\t    method: \"gia_events.api.count_subscribers\",\n\t\t    args: {\n\t\t        'email_group': row.email_group\n\t\t        \n\t\t    },\n\t\t    callback: (response) => {\n\t\t        let row = frappe.get_doc(cdt, cdn);\n\t\t        frappe.model.set_value(row.doctype, row.name, \"total_subscribed\", response.message[0]);\n\t\t        frappe.model.set_value(row.doctype, row.name, \"total_unsubscribed\", response.message[1]);\n\t\t        \n\t\t    }\n\t\t    \n\t\t});\n\t}\n});",
+  "view": "Form"
+ }
+]

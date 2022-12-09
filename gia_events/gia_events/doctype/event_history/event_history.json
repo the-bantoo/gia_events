@@ -1,0 +1,46 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2021-12-13 08:57:13.679466",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "event_name",
+  "event_status",
+  "event_type"
+ ],
+ "fields": [
+  {
+   "fieldname": "event_name",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Event Name",
+   "options": "Events"
+  },
+  {
+   "fetch_from": "event_name.status",
+   "fieldname": "event_status",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Event Status"
+  },
+  {
+   "fetch_from": "event_name.type",
+   "fieldname": "event_type",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Event Type"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2021-12-13 08:57:31.685098",
+ "modified_by": "Administrator",
+ "module": "Gia Events",
+ "name": "Event History",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

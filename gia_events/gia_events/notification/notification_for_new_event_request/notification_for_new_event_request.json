@@ -1,0 +1,29 @@
+{
+ "attach_print": 0,
+ "channel": "Email",
+ "condition": "",
+ "creation": "2022-07-07 11:31:40.273546",
+ "days_in_advance": 0,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "Email Group Member",
+ "enabled": 1,
+ "event": "Value Change",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "<h3>{{_(\"Event Request\")}}</h3>\n\n<p>{{ _(\"New event request created :- \") }} {{ doc.name }}</p>",
+ "modified": "2022-07-18 13:04:42.963347",
+ "modified_by": "Administrator",
+ "module": "Gia Events",
+ "name": "Notification For New Event Request",
+ "owner": "Administrator",
+ "recipients": [
+  {
+   "receiver_by_role": "System Manager"
+  }
+ ],
+ "send_system_notification": 1,
+ "send_to_all_assignees": 0,
+ "subject": "New Unsubscribe: {{ doc.name }}",
+ "value_changed": "unsubscribed"
+}

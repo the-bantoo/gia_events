@@ -1,0 +1,569 @@
+{
+ "actions": [],
+ "allow_events_in_timeline": 1,
+ "allow_import": 1,
+ "autoname": "REQ-.####",
+ "creation": "2022-01-10 20:06:03.497484",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "email_append_to": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_1",
+  "already_exists",
+  "section_break_3",
+  "first_name",
+  "last_name",
+  "full_name",
+  "phone_number",
+  "corporate_number",
+  "col_1",
+  "email_address",
+  "corporate_email",
+  "company",
+  "industry",
+  "job_title",
+  "sec_1",
+  "event_name",
+  "interest_type",
+  "type",
+  "source",
+  "col_2",
+  "payment_status",
+  "request_type",
+  "attendance_type",
+  "lead",
+  "segmentation",
+  "segmentation_no_1",
+  "segmentation_no_2",
+  "seg_col",
+  "segmentation_details",
+  "segmentation_status",
+  "sec_2",
+  "newsletter",
+  "col_3",
+  "terms_conditions",
+  "col_4",
+  "data_consent",
+  "sec_3",
+  "speaker_bio",
+  "bullet_points",
+  "topic",
+  "interested_session",
+  "profile_image",
+  "sec_4",
+  "number_of_tickets",
+  "payment_type",
+  "paid_amount",
+  "currency",
+  "col_5",
+  "tax",
+  "payment_fee",
+  "sec_5",
+  "type_of_sponsor",
+  "type_of_sponsorship",
+  "sponsor_rep",
+  "deal_value",
+  "col_6",
+  "mode_of_payment",
+  "sponsor_name",
+  "sec_6",
+  "address",
+  "zip_code",
+  "col_7",
+  "city",
+  "country",
+  "data_68",
+  "follow_up_section",
+  "next_contact_by",
+  "column_break_58",
+  "next_contact_date",
+  "ends_on",
+  "sec_8",
+  "media_partner_type",
+  "media_rep",
+  "col_8",
+  "media_name",
+  "gdpr_section",
+  "gdpr_compliance_update",
+  "section_break_79",
+  "amended_from",
+  "column_break_80"
+ ],
+ "fields": [
+  {
+   "fieldname": "first_name",
+   "fieldtype": "Data",
+   "label": "First Name"
+  },
+  {
+   "fieldname": "last_name",
+   "fieldtype": "Data",
+   "label": "Last Name"
+  },
+  {
+   "fieldname": "full_name",
+   "fieldtype": "Data",
+   "label": "Full Name"
+  },
+  {
+   "fieldname": "email_address",
+   "fieldtype": "Data",
+   "label": "Email Address",
+   "options": "Email"
+  },
+  {
+   "fieldname": "phone_number",
+   "fieldtype": "Data",
+   "label": "Phone Number",
+   "options": "Phone"
+  },
+  {
+   "fieldname": "country",
+   "fieldtype": "Link",
+   "label": "Country",
+   "options": "Country"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Data",
+   "label": "Company Name"
+  },
+  {
+   "fieldname": "job_title",
+   "fieldtype": "Data",
+   "label": "Job Title"
+  },
+  {
+   "fieldname": "corporate_number",
+   "fieldtype": "Data",
+   "label": "Corporate Number"
+  },
+  {
+   "fieldname": "corporate_email",
+   "fieldtype": "Data",
+   "label": "Corporate Email Address"
+  },
+  {
+   "fieldname": "col_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "industry",
+   "fieldtype": "Link",
+   "label": "Industry",
+   "options": "Industry Type"
+  },
+  {
+   "fieldname": "sec_1",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "event_name",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "Event Name",
+   "options": "Events"
+  },
+  {
+   "fieldname": "interest_type",
+   "fieldtype": "Select",
+   "label": "Interested In",
+   "options": "\nSpeaking\nAttending\nSponsoring\nExhibiting"
+  },
+  {
+   "fieldname": "type",
+   "fieldtype": "Select",
+   "label": "Type of Participant",
+   "options": "\nSpeaker\nAttendee\nMedia Partner\nSponsor\nExhibitor"
+  },
+  {
+   "fieldname": "col_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "payment_status",
+   "fieldtype": "Select",
+   "label": "Payment Status",
+   "options": "\nFree\nPaid\nSponsored\nOther"
+  },
+  {
+   "fieldname": "request_type",
+   "fieldtype": "Select",
+   "label": "Type of Request",
+   "options": "\nBrochure Request\nSponsor Request\nSpeaker Request\nPaid Request\nFree Guest Request\nMedia Request\nFree Virtual Guest Request\nSpeaker Request"
+  },
+  {
+   "fieldname": "attendance_type",
+   "fieldtype": "Select",
+   "label": "Type of Attendance",
+   "options": "\nOnline\nIn-Person"
+  },
+  {
+   "fieldname": "lead",
+   "fieldtype": "Link",
+   "label": "Lead",
+   "options": "Lead",
+   "read_only": 1
+  },
+  {
+   "default": "Online Registration",
+   "fieldname": "source",
+   "fieldtype": "Link",
+   "label": "Source",
+   "options": "Lead Source"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "sec_2",
+   "fieldtype": "Section Break",
+   "label": "Service Agreement"
+  },
+  {
+   "default": "0",
+   "fieldname": "newsletter",
+   "fieldtype": "Check",
+   "label": "Newsletter Subscription"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.already_exists == 1",
+   "fieldname": "already_exists",
+   "fieldtype": "Check",
+   "label": "Already Exists"
+  },
+  {
+   "fieldname": "col_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "terms_conditions",
+   "fieldtype": "Check",
+   "label": "Terms & Conditions"
+  },
+  {
+   "default": "0",
+   "fieldname": "data_consent",
+   "fieldtype": "Check",
+   "label": "Data Privacy Consent"
+  },
+  {
+   "fieldname": "col_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "collapsible": 1,
+   "depends_on": "eval:doc.request_type == \"Speaker Request\"",
+   "fieldname": "sec_3",
+   "fieldtype": "Section Break",
+   "label": "Speaker Details"
+  },
+  {
+   "fieldname": "speaker_bio",
+   "fieldtype": "Small Text",
+   "label": "Biography"
+  },
+  {
+   "fieldname": "bullet_points",
+   "fieldtype": "Small Text",
+   "label": "Presentation Description"
+  },
+  {
+   "fieldname": "topic",
+   "fieldtype": "Data",
+   "label": "Presentation Title"
+  },
+  {
+   "fieldname": "interested_session",
+   "fieldtype": "Link",
+   "label": "Interested Session",
+   "options": "Event Session"
+  },
+  {
+   "fieldname": "profile_image",
+   "fieldtype": "Attach Image",
+   "label": "Portrait Photo"
+  },
+  {
+   "collapsible": 1,
+   "depends_on": "eval:doc.payment_status == \"Paid\" || doc.payment_status == \"Sponsored\"",
+   "fieldname": "sec_4",
+   "fieldtype": "Section Break",
+   "label": "Payment Details"
+  },
+  {
+   "fieldname": "number_of_tickets",
+   "fieldtype": "Data",
+   "label": "Number of Tickets"
+  },
+  {
+   "fieldname": "payment_type",
+   "fieldtype": "Data",
+   "label": "Mode of Payment"
+  },
+  {
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "Billing Currency",
+   "options": "Currency"
+  },
+  {
+   "fieldname": "col_5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "tax",
+   "fieldtype": "Data",
+   "label": "Tax Amount"
+  },
+  {
+   "fieldname": "payment_fee",
+   "fieldtype": "Data",
+   "label": "Invoice Total"
+  },
+  {
+   "collapsible": 1,
+   "depends_on": "eval:doc.request_type == \"Sponsor Request\"",
+   "fieldname": "sec_5",
+   "fieldtype": "Section Break",
+   "label": "Sponsor Details"
+  },
+  {
+   "fieldname": "type_of_sponsor",
+   "fieldtype": "Select",
+   "label": "Type of Sponsor",
+   "options": "\nIndividual\nPhilanthropist\nCompany\nNGO\nNon-Profit\nOther"
+  },
+  {
+   "fieldname": "type_of_sponsorship",
+   "fieldtype": "Select",
+   "label": "Type of Sponsorship",
+   "options": "\nFinancial Event Sponsorship\nIn-Kind Sponsorship\nMedia Event Sponsorship\nPromotional Partners\nOther"
+  },
+  {
+   "fieldname": "deal_value",
+   "fieldtype": "Currency",
+   "label": "Deal Value"
+  },
+  {
+   "fieldname": "mode_of_payment",
+   "fieldtype": "Link",
+   "label": "Mode of Payment",
+   "options": "Mode of Payment"
+  },
+  {
+   "fieldname": "col_6",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "sponsor_rep",
+   "fieldtype": "Data",
+   "label": "Representative Name"
+  },
+  {
+   "fieldname": "sponsor_name",
+   "fieldtype": "Data",
+   "label": "Sponsor Name"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "sec_6",
+   "fieldtype": "Section Break",
+   "label": "Address"
+  },
+  {
+   "fieldname": "address",
+   "fieldtype": "Data",
+   "label": "Address"
+  },
+  {
+   "fieldname": "zip_code",
+   "fieldtype": "Data",
+   "label": "Postal/Zip Code"
+  },
+  {
+   "fieldname": "col_7",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "city",
+   "fieldtype": "Data",
+   "label": "City"
+  },
+  {
+   "collapsible": 1,
+   "depends_on": "eval:doc.request_type == \"Media Request\"",
+   "fieldname": "sec_8",
+   "fieldtype": "Section Break",
+   "label": "Media Partner Details"
+  },
+  {
+   "fieldname": "media_partner_type",
+   "fieldtype": "Select",
+   "label": "Type of Media Partner",
+   "options": "\nMedia Company\nIndividual\nOther"
+  },
+  {
+   "fieldname": "media_rep",
+   "fieldtype": "Data",
+   "label": "Representative Name"
+  },
+  {
+   "fieldname": "col_8",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "media_name",
+   "fieldtype": "Data",
+   "label": "Media Partner Name"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Request",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "segmentation",
+   "fieldtype": "Section Break",
+   "label": "Segmentation"
+  },
+  {
+   "fieldname": "segmentation_no_1",
+   "fieldtype": "Select",
+   "label": "Segmentation No 1",
+   "options": "\nEnd-user\nSolution Provider\nMedia\nOther"
+  },
+  {
+   "fieldname": "segmentation_no_2",
+   "fieldtype": "Select",
+   "label": "Segmentation No 2",
+   "options": "\nCustomer analytics\nData analytics\nAI/ML\nBlockchain\nCyber security\nTPRM\nData privacy compliance\nSmart Manufacturing\nIoT"
+  },
+  {
+   "fieldname": "seg_col",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "segmentation_details",
+   "fieldtype": "Table MultiSelect",
+   "label": "Segmentation Details",
+   "options": "Segmentation No 1 Details"
+  },
+  {
+   "fieldname": "segmentation_status",
+   "fieldtype": "Table MultiSelect",
+   "label": "Segmentation Status",
+   "options": "Segmentation No 2 Details"
+  },
+  {
+   "fieldname": "follow_up_section",
+   "fieldtype": "Section Break",
+   "label": "Follow Up"
+  },
+  {
+   "fieldname": "next_contact_by",
+   "fieldtype": "Link",
+   "label": "Next Contact By",
+   "options": "User",
+   "width": "100px"
+  },
+  {
+   "fieldname": "ends_on",
+   "fieldtype": "Datetime",
+   "label": "Ends On"
+  },
+  {
+   "fieldname": "data_68",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "column_break_58",
+   "fieldtype": "Column Break"
+  },
+  {
+   "bold": 1,
+   "fieldname": "next_contact_date",
+   "fieldtype": "Datetime",
+   "label": "Next Contact Date",
+   "no_copy": 1,
+   "width": "100px"
+  },
+  {
+   "fieldname": "paid_amount",
+   "fieldtype": "Currency",
+   "label": "Paid Amount",
+   "mandatory_depends_on": "eval:doc.type ==\"Attendee\";",
+   "precision": "2"
+  },
+  {
+   "depends_on": "already_exists",
+   "fieldname": "section_break_1",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_3",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "gdpr_section",
+   "fieldtype": "Section Break",
+   "label": "GDPR"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "Today",
+   "fieldname": "gdpr_compliance_update",
+   "fieldtype": "Date",
+   "label": "GDPR Compliance Update"
+  },
+  {
+   "fieldname": "section_break_79",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_80",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2022-12-08 07:03:13.462775",
+ "modified_by": "Administrator",
+ "module": "Gia Events",
+ "name": "Request",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sender_field": "email_address",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "subject_field": "full_name",
+ "title_field": "full_name",
+ "track_changes": 1,
+ "track_seen": 1
+}

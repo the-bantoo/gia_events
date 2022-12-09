@@ -1,0 +1,21 @@
+{
+ "cards": [],
+ "charts": [
+  {
+   "chart": "Request Forms",
+   "width": "Full"
+  }
+ ],
+ "creation": "2021-07-28 08:46:18.232758",
+ "dashboard_name": "Registration",
+ "docstatus": 0,
+ "doctype": "Dashboard",
+ "idx": 0,
+ "is_default": 0,
+ "is_standard": 1,
+ "modified": "2021-10-11 17:18:27.924500",
+ "modified_by": "Administrator",
+ "module": "Gia Events",
+ "name": "Registration",
+ "owner": "support@thebantoo.com"
+}

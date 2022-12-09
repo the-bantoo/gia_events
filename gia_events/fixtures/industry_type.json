@@ -1,0 +1,548 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Accounting",
+  "modified": "2022-01-25 04:50:11.995731",
+  "name": "Accounting"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Advertising",
+  "modified": "2022-01-25 04:50:12.003757",
+  "name": "Advertising"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Aerospace",
+  "modified": "2022-01-25 04:50:12.006793",
+  "name": "Aerospace"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Agriculture",
+  "modified": "2022-01-25 04:50:12.011233",
+  "name": "Agriculture"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Airline",
+  "modified": "2022-01-25 04:50:12.014127",
+  "name": "Airline"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Apparel & Accessories",
+  "modified": "2022-01-25 04:50:12.017022",
+  "name": "Apparel & Accessories"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Automotive",
+  "modified": "2022-01-25 04:50:12.019869",
+  "name": "Automotive"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Banking",
+  "modified": "2022-01-25 04:50:12.022624",
+  "name": "Banking"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Biotechnology",
+  "modified": "2022-01-25 04:50:12.025524",
+  "name": "Biotechnology"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Broadcasting",
+  "modified": "2022-01-25 04:50:12.028469",
+  "name": "Broadcasting"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Brokerage",
+  "modified": "2022-01-25 04:50:12.031501",
+  "name": "Brokerage"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Chemical",
+  "modified": "2022-01-25 04:50:12.034450",
+  "name": "Chemical"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Computer",
+  "modified": "2022-01-25 04:50:12.037374",
+  "name": "Computer"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Consulting",
+  "modified": "2022-01-25 04:50:12.040334",
+  "name": "Consulting"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Consumer Products",
+  "modified": "2022-01-25 04:50:12.043251",
+  "name": "Consumer Products"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Cosmetics",
+  "modified": "2022-01-25 04:50:12.046106",
+  "name": "Cosmetics"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Defense",
+  "modified": "2022-01-25 04:50:12.048988",
+  "name": "Defense"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Department Stores",
+  "modified": "2022-01-25 04:50:12.051871",
+  "name": "Department Stores"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Education",
+  "modified": "2022-01-25 04:50:12.054801",
+  "name": "Education"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Electronics",
+  "modified": "2022-01-25 04:50:12.057656",
+  "name": "Electronics"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Energy",
+  "modified": "2022-01-25 04:50:12.060547",
+  "name": "Energy"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Entertainment & Leisure",
+  "modified": "2022-01-25 04:50:12.063410",
+  "name": "Entertainment & Leisure"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Executive Search",
+  "modified": "2022-01-25 04:50:12.066314",
+  "name": "Executive Search"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Financial Services",
+  "modified": "2022-01-25 04:50:12.069231",
+  "name": "Financial Services"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Food, Beverage & Tobacco",
+  "modified": "2022-01-25 04:50:12.072193",
+  "name": "Food, Beverage & Tobacco"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Grocery",
+  "modified": "2022-01-25 04:50:12.075104",
+  "name": "Grocery"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Health Care",
+  "modified": "2022-01-25 04:50:12.078063",
+  "name": "Health Care"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Internet Publishing",
+  "modified": "2022-01-25 04:50:12.081016",
+  "name": "Internet Publishing"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Investment Banking",
+  "modified": "2022-01-25 04:50:12.083918",
+  "name": "Investment Banking"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Legal",
+  "modified": "2022-01-25 04:50:12.086794",
+  "name": "Legal"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Manufacturing",
+  "modified": "2022-01-25 04:50:12.089731",
+  "name": "Manufacturing"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Motion Picture & Video",
+  "modified": "2022-01-25 04:50:12.092615",
+  "name": "Motion Picture & Video"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Music",
+  "modified": "2022-01-25 04:50:12.095510",
+  "name": "Music"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Newspaper Publishers",
+  "modified": "2022-01-25 04:50:12.098402",
+  "name": "Newspaper Publishers"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Online Auctions",
+  "modified": "2022-01-25 04:50:12.101345",
+  "name": "Online Auctions"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Pension Funds",
+  "modified": "2022-01-25 04:50:12.104312",
+  "name": "Pension Funds"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Pharmaceuticals",
+  "modified": "2022-01-25 04:50:12.107344",
+  "name": "Pharmaceuticals"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Private Equity",
+  "modified": "2022-01-25 04:50:12.110378",
+  "name": "Private Equity"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Publishing",
+  "modified": "2022-01-25 04:50:12.113361",
+  "name": "Publishing"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Real Estate",
+  "modified": "2022-01-25 04:50:12.116359",
+  "name": "Real Estate"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Retail & Wholesale",
+  "modified": "2022-01-25 04:50:12.119439",
+  "name": "Retail & Wholesale"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Securities & Commodity Exchanges",
+  "modified": "2022-01-25 04:50:12.123005",
+  "name": "Securities & Commodity Exchanges"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Service",
+  "modified": "2022-01-25 04:50:12.125996",
+  "name": "Service"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Soap & Detergent",
+  "modified": "2022-01-25 04:50:12.129003",
+  "name": "Soap & Detergent"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Software",
+  "modified": "2022-01-25 04:50:12.132021",
+  "name": "Software"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Sports",
+  "modified": "2022-01-25 04:50:12.135048",
+  "name": "Sports"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Technology",
+  "modified": "2022-01-25 04:50:12.138013",
+  "name": "Technology"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Telecommunications",
+  "modified": "2022-01-25 04:50:12.141015",
+  "name": "Telecommunications"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Television",
+  "modified": "2022-01-25 04:50:12.144011",
+  "name": "Television"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Transportation",
+  "modified": "2022-01-25 04:50:12.147120",
+  "name": "Transportation"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Venture Capital",
+  "modified": "2022-01-25 04:50:12.150213",
+  "name": "Venture Capital"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Agriculture / Food Services",
+  "modified": "2022-01-26 07:47:46.789428",
+  "name": "Agriculture / Food Services"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Aviation",
+  "modified": "2022-01-26 07:47:46.810024",
+  "name": "Aviation"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Banking / Financial Services",
+  "modified": "2022-01-26 07:47:46.814827",
+  "name": "Banking / Financial Services"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Building / Construction / Engineering",
+  "modified": "2022-01-26 07:47:46.819620",
+  "name": "Building / Construction / Engineering"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Business Services / Consulting",
+  "modified": "2022-01-26 07:47:46.824049",
+  "name": "Business Services / Consulting"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Chemicals",
+  "modified": "2022-01-26 07:47:46.828455",
+  "name": "Chemicals"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Energy / Utilities",
+  "modified": "2022-01-26 07:47:46.833043",
+  "name": "Energy / Utilities"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Consumer Products / Packages Goods",
+  "modified": "2022-01-26 07:47:46.839374",
+  "name": "Consumer Products / Packages Goods"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Defense / Aerospace",
+  "modified": "2022-01-26 07:47:46.844250",
+  "name": "Defense / Aerospace"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Entertainment / Online Gaming",
+  "modified": "2022-01-26 07:47:46.852090",
+  "name": "Entertainment / Online Gaming"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Government / Public Sector",
+  "modified": "2022-01-26 07:47:46.858517",
+  "name": "Government / Public Sector"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Hardware / Software / Technology",
+  "modified": "2022-01-26 07:47:46.864965",
+  "name": "Hardware / Software / Technology"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Healthcare / Hospitals",
+  "modified": "2022-01-26 07:47:46.869841",
+  "name": "Healthcare / Hospitals"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Hospitality / Leisure",
+  "modified": "2022-01-26 07:47:46.874516",
+  "name": "Hospitality / Leisure"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Human Resources",
+  "modified": "2022-01-26 07:47:46.879032",
+  "name": "Human Resources"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Insurance",
+  "modified": "2022-01-26 07:47:46.883900",
+  "name": "Insurance"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "ISP / Cloud / Hosting Provider",
+  "modified": "2022-01-26 07:47:46.889782",
+  "name": "ISP / Cloud / Hosting Provider"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Logistics / Transportation",
+  "modified": "2022-01-26 07:47:46.899978",
+  "name": "Logistics / Transportation"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Marketing & Advertising",
+  "modified": "2022-01-26 07:47:46.907178",
+  "name": "Marketing & Advertising"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Media / Publishing",
+  "modified": "2022-01-26 07:47:46.911782",
+  "name": "Media / Publishing"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Not for Profit",
+  "modified": "2022-01-26 07:47:46.916660",
+  "name": "Not for Profit"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Pharmaceutical / Medical Devices",
+  "modified": "2022-01-26 07:47:46.921496",
+  "name": "Pharmaceutical / Medical Devices"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Retail",
+  "modified": "2022-01-26 07:47:46.928216",
+  "name": "Retail"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Other",
+  "modified": "2022-01-26 07:47:46.935217",
+  "name": "Other"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Industrial Automation",
+  "modified": "2022-01-26 07:47:46.939819",
+  "name": "Industrial Automation"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Beverages / Food",
+  "modified": "2022-01-26 07:47:46.944521",
+  "name": "Beverages / Food"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Oil & Gas",
+  "modified": "2022-01-26 07:47:46.949250",
+  "name": "Oil & Gas"
+ }
+]

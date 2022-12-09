@@ -1,0 +1,46 @@
+{
+ "actions": [],
+ "creation": "2021-09-21 10:14:24.255535",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "source_url",
+  "event_name",
+  "request_type"
+ ],
+ "fields": [
+  {
+   "fieldname": "source_url",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Source URL"
+  },
+  {
+   "fieldname": "event_name",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Event Name",
+   "options": "Events"
+  },
+  {
+   "fieldname": "request_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Request Type",
+   "options": "\nAttendance\nSpeaker Form\nBrochure\nSponsorship Package\nMedia Package\nEvent Recording\nData Request\nData Rectification\nData Erasure"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2021-09-21 10:18:14.554052",
+ "modified_by": "Administrator",
+ "module": "Gia Events",
+ "name": "Event URLs",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

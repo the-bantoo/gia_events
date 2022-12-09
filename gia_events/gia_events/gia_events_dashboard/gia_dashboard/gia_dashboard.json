@@ -1,0 +1,29 @@
+{
+ "cards": [],
+ "charts": [
+  {
+   "chart": "Verified Requests",
+   "width": "Full"
+  },
+  {
+   "chart": "Request Category",
+   "width": "Half"
+  },
+  {
+   "chart": "Request Forms",
+   "width": "Half"
+  }
+ ],
+ "creation": "2022-01-08 12:01:42.090911",
+ "dashboard_name": "GIA Dashboard",
+ "docstatus": 0,
+ "doctype": "Dashboard",
+ "idx": 0,
+ "is_default": 0,
+ "is_standard": 1,
+ "modified": "2022-01-08 12:02:22.082233",
+ "modified_by": "Administrator",
+ "module": "Gia Events",
+ "name": "GIA Dashboard",
+ "owner": "Administrator"
+}

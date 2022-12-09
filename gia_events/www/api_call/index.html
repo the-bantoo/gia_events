@@ -1,0 +1,18 @@
+<h1>Redirecting....</h1>
+<script>
+    frappe.call({
+    method: 'frappe.core.doctype.user.user.get_role_profile',
+    args: {
+        role_profile: 'Test'
+    },
+    // disable the button until the request is completed
+    // freeze the screen until the request is completed
+    freeze: true,
+    callback: (r) => {
+        // on success
+    },
+    error: (r) => {
+        // on error
+    }
+})
+</script>

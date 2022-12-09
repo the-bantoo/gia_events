@@ -1,0 +1,30 @@
+{
+ "attach_print": 1,
+ "channel": "Email",
+ "condition": "",
+ "creation": "2022-07-22 14:45:13.540719",
+ "days_in_advance": 0,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "Request",
+ "enabled": 1,
+ "event": "New",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "<h3>{{_(\"Event Request\")}}</h3>\n\n<p>{{ _(\"New event request created\")}}</p>\n<a class=\"btn btn-primary btn-lg\" href=\"{{frappe.utils.get_url_to_form(doc.doctype, doc.name)}}\" rolle=\"button\">View Document</a>",
+ "modified": "2022-11-24 15:08:37.911344",
+ "modified_by": "Administrator",
+ "module": "Gia Events",
+ "name": "New Event Request",
+ "owner": "Administrator",
+ "recipients": [
+  {
+   "receiver_by_role": "Accounts User"
+  }
+ ],
+ "send_system_notification": 1,
+ "send_to_all_assignees": 0,
+ "sender": "",
+ "sender_email": "",
+ "subject": "New Event Request: {{ doc.name }}"
+}

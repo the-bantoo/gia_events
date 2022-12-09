@@ -1,0 +1,112 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Email Template",
+  "modified": "2022-01-25 04:50:12.257573",
+  "name": "Leave Approval Notification",
+  "response": "<h1>Leave Application Notification</h1>\n<h3>Details:</h3>\n\n\t<table class=\"table table-bordered small\" style=\"max-width: 500px;\">\n\t\t<tbody><tr>\n\t\t\t<td>Employee</td>\n\t\t\t<td>{{employee_name}}</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>Leave Type</td>\n\t\t\t<td>{{leave_type}}</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>From Date</td>\n\t\t\t<td>{{from_date}}</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>To Date</td>\n\t\t\t<td>{{to_date}}</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>Status</td>\n\t\t\t<td>{{status}}</td>\n\t\t</tr>\n\t</tbody></table>\n",
+  "response_html": null,
+  "subject": "Leave Approval Notification",
+  "use_html": 0
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Email Template",
+  "modified": "2022-01-25 04:50:12.298022",
+  "name": "Leave Status Notification",
+  "response": "<h1>Leave Application Notification</h1>\n<h3>Details:</h3>\n\n\t<table class=\"table table-bordered small\" style=\"max-width: 500px;\">\n\t\t<tbody><tr>\n\t\t\t<td>Employee</td>\n\t\t\t<td>{{employee_name}}</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>Leave Type</td>\n\t\t\t<td>{{leave_type}}</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>From Date</td>\n\t\t\t<td>{{from_date}}</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>To Date</td>\n\t\t\t<td>{{to_date}}</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>Status</td>\n\t\t\t<td>{{status}}</td>\n\t\t</tr>\n\t</tbody></table>\n",
+  "response_html": null,
+  "subject": "Leave Status Notification",
+  "use_html": 0
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Email Template",
+  "modified": "2022-01-25 04:50:12.306993",
+  "name": "Interview Reminder",
+  "response": "<h1>Interview Reminder</h1>\n\n<p>\n\tInterview: {{name}} is scheduled on {{scheduled_on}} from {{from_time}} to {{to_time}}\n</p>\n",
+  "response_html": null,
+  "subject": "Interview Reminder",
+  "use_html": 0
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Email Template",
+  "modified": "2022-01-25 04:50:12.312340",
+  "name": "Interview Feedback Reminder",
+  "response": "<h1>Interview Feedback Reminder</h1>\n\n<p>\n\tInterview Feedback for Interview {{ name }} is not submitted yet. Please submit your feedback. Thank you, good day!\n</p>\n",
+  "response_html": null,
+  "subject": "Interview Feedback Reminder",
+  "use_html": 0
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Email Template",
+  "modified": "2022-01-25 04:50:12.317231",
+  "name": "Dispatch Notification",
+  "response": "<h1>Dispatch Notification</h1>\n<h3>Details:</h3>\n<table class=\"table table-bordered small\" style=\"max-width: 500px;\">\n    <tbody>\n        <tr>\n            <td>Customer's Name</td>\n            <td>{{ customer }}</td>\n        </tr>\n        <tr>\n            <td>Contact's Name</td>\n            <td>{{ first_name }} {{ last_name }}</td>\n        </tr>\n        <tr>\n            <td>Address Name</td>\n            <td>{{ address }}</td>\n        </tr>\n        <tr>\n            <td>Address Details</td>\n            <td>{{ customer_address }}</td>\n        </tr>\n        <tr>\n            <td>Order Number</td>\n            <td>{{ delivery_note }}</td>\n        </tr>\n        <tr>\n            <td>Order Total</td>\n            <td>{{ grand_total }}</td>\n        </tr>\n        <tr>\n            <td>Departure Time</td>\n            <td>{{ departure_time }}</td>\n        </tr>\n        <tr>\n            <td>Estimated Arrival</td>\n            <td>{{ estimated_arrival }}</td>\n        </tr>\n        <tr>\n            <td>Driver's Name</td>\n            <td>{{ driver_name }}</td>\n        </tr>\n        <tr>\n            <td>Driver's Number</td>\n            <td>{{ cell_number }}</td>\n        </tr>\n        <tr>\n            <td>Vehicle Number</td>\n            <td>{{ vehicle }}</td>\n        </tr>\n    </tbody>\n</table>\n",
+  "response_html": null,
+  "subject": "Your order is out for delivery!",
+  "use_html": 0
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Email Template",
+  "modified": "2022-01-27 08:41:57.004323",
+  "name": "Welcome: World Data Summit - Amsterdam - May 2022",
+  "response": "<div class=\"ql-editor read-mode\"><p>Dear {{ first_name }},</p><p>On behalf of GIA Global Group, I am pleased to welcome you to the World Data Summit, which will take place in <strong>Amsterdam, the Netherlands</strong> on <strong>May 18th - 20th</strong>. Stay up to date with the latest agenda by checking this <a href=\"https://worlddatasummit.com/WDS2022.pdf\" rel=\"noopener noreferrer\">link</a>.</p><p><br></p><p>We are currently finalizing the hotel. I will keep you posted once we confirm a discounted rate on accommodation.</p><p><br></p><p><em>Health and safety are a priority at World Data Summit. Today we are announcing that official vaccine certificates or a negative Covid-19 test result will be required to attend the event. Where official certificates cannot be provided, we will require a negative rapid test, which will remain valid for 24 hours. </em><strong><em>If you require a test on any day of the conference, please let us know in advance.</em></strong></p><p><br></p><p><em>We will remain supportive of any attendee who wears a mask. We will ensure all appropriate measures, as set by the Dutch health authorities in May, are adhered to. If any rules regarding vaccines and mask-wearing change closer to May, we will alert all attendees in a timely fashion.</em></p><p><br></p><p><span style=\"color: black;\">In the meantime, do not hesitate to contact me with more questions. We look forward to meeting you in Amsterdam! </span></p></div>",
+  "response_html": null,
+  "subject": "Welcome: World Data Summit - Amsterdam - May 2022",
+  "use_html": 0
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Email Template",
+  "modified": "2022-01-27 08:41:47.959629",
+  "name": "Startup - World Data Summit 2022 - Amsterdam",
+  "response": "<div class=\"ql-editor read-mode\"><p>Hi {{ first_name }},</p><p><br></p><p>Thank you very much for your interest in the World Data Summit!</p><p><br></p><p>My name is Anna and I am the Project Director of this meeting, which we schedule for May 2022.</p><p><br></p><p>Please click the links below to get a better understanding of the Summit and partnership packages:</p><ol><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"></span><strong><a href=\"https://worlddatasummit.com/\" rel=\"noopener noreferrer\">World Data Summit</a> - Amsterdam - May 18-20, 2022</strong></li><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"></span><a href=\"https://worlddatasummit.com/WDS2022pdf\" rel=\"noopener noreferrer\">Event program</a></li><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"></span> <a href=\"https://worlddatasummit.com/WDS_sp.pdf\" rel=\"noopener noreferrer\">Sponsorship offer </a></li></ol><p><em>&nbsp;&nbsp;&nbsp;* for our live event partners we are happy to modify any package to meet your needs.</em></p><p><br></p><p><strong><em>As for a startup, we are happy to offer you a 50% discount on any package of your interest.</em></strong></p><p><br></p><p>Additionally, please find enclosed a list of our past attendees (both live and virtual meetings) to get a better understanding of the event. Our event is built for good networking, check out the photos from World Data Summit 2019&nbsp;<a href=\"https://worlddatasummit.com/gallery-2019/\" rel=\"noopener noreferrer\">here</a>&nbsp;and the video&nbsp;<a href=\"https://youtu.be/thudzEmDK_4\" rel=\"noopener noreferrer\">here</a>.</p><p><br></p><p>Do not hesitate to contact me for more details. Feel free to schedule a call with me <a href=\"https://calendly.com/anna-giaglobalgroup/15min\" rel=\"noopener noreferrer\">here</a>. I look forward to hearing from you!</p></div>",
+  "response_html": null,
+  "subject": "Startup - World Data Summit 2022 - Amsterdam",
+  "use_html": 0
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Email Template",
+  "modified": "2022-01-27 08:41:37.837936",
+  "name": "Speaking at World Data Summit 2022 - Amsterdam",
+  "response": "<div class=\"ql-editor read-mode\"><p>Hi {{ first_name }},</p><p><br></p><p>Thank you very much for your interest in the <strong>World Data Summit</strong>!</p><p><br></p><p>My name is Anna and I am the Project Director of this meeting, which we organize in May 2022.</p><p><br></p><p>Please click the links below to get a better understanding of the Summit and <strong>partnership</strong> packages, which include <strong>speaking / moderating</strong> opportunities:</p><ol><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"></span><strong><a href=\"https://worlddatasummit.com/\" rel=\"noopener noreferrer\">World Data Summit</a> - Amsterdam - May 18-20, 2022</strong></li><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"></span><a href=\"https://worlddatasummit.com/WDS2022.pdf\" rel=\"noopener noreferrer\">Preliminary program</a></li><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"></span><a href=\"https://worlddatasummit.com/WDS_sp.pdf\" rel=\"noopener noreferrer\">Sponsorship offer </a></li></ol><p><em>&nbsp;&nbsp;&nbsp;&nbsp;* for our live event partners we are happy to modify any package to meet your needs.</em></p><p><em>\ufeff</em></p><p>Additionally, please find enclosed a list of our past attendees (both live and virtual meetings) to get a better understanding of the event. Our event is built for good networking, check out the photos from World Data Summit 2019&nbsp;<a href=\"https://worlddatasummit.com/gallery-2019/\" rel=\"noopener noreferrer\">here</a>&nbsp;and the video&nbsp;<a href=\"https://youtu.be/thudzEmDK_4\" rel=\"noopener noreferrer\">here</a>.</p><p><br></p><p>Do not hesitate to contact me for more details. Feel free to schedule a call with me <a href=\"https://calendly.com/anna-giaglobalgroup/15min\" rel=\"noopener noreferrer\">here</a>. I look forward to hearing from you!</p></div>",
+  "response_html": null,
+  "subject": "Speaking at World Data Summit 2022 - Amsterdam",
+  "use_html": 0
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Email Template",
+  "modified": "2022-01-31 10:11:11.862476",
+  "name": "Discount: World Data Summit 2022",
+  "response": "<div class=\"ql-editor read-mode\"><p><span style=\"color: black;\">Greetings {{ first_name }},</span></p><p><br></p><p><span style=\"color: black;\">Thank you very much for your interest in the&nbsp;</span><strong style=\"color: black;\">&nbsp;World Data Summit</strong><span style=\"color: black;\">!</span></p><p><br></p><p>My name is Anna and I am the Project Director of this meeting, which will take place on May 18-20, 2022. Please click the links below to get more information about the agenda, venue and registration terms:</p><ol><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"></span><a href=\"https://worlddatasummit.com/WDS2022.pdf\" rel=\"noopener noreferrer\">Event program</a></li><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"></span><span style=\"color: black;\">Location: </span><a href=\"https://goo.gl/maps/DWTU6C3hq84gjr7e7\" rel=\"noopener noreferrer\">Postillion Hotel &amp; Convention Centre Amsterdam</a><strong> </strong></li><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"></span><a href=\"https://worlddatasummit.com/online-registration/\" rel=\"noopener noreferrer\">Online registration page</a></li></ol><p><br></p><p><em style=\"color: black;\">Share your contact details with our partners for one opt-out email and get an additional 15% discount on any ticket purchase. To apply this discount, use a promo code WDS22-PARTNER-15 on our&nbsp;<a href=\"https://worlddatasummit.com/online-registration/\" rel=\"noopener noreferrer\">online registration page</a>.</em></p><p><br></p><p><span style=\"color: black;\"><span class=\"ql-cursor\">\ufeff</span>Get a better understanding of the event by checking the list of our past attendees, both live and virtual meetings, enclosed. Our event is all about knowledge exchange and quality networking. You can see the photos from World Data Summit 2019&nbsp;</span><a href=\"https://worlddatasummit.com/gallery-2019/\" rel=\"noopener noreferrer\" style=\"color: black;\">here</a><span style=\"color: black;\">&nbsp;and the video&nbsp;</span><a href=\"https://youtu.be/thudzEmDK_4\" rel=\"noopener noreferrer\" style=\"color: black;\">here</a><span style=\"color: black;\">.</span></p><p><span style=\"color: black;\">Do not hesitate to contact me for more details. Feel free to schedule a call with me&nbsp;</span><a href=\"https://calendly.com/anna-giaglobalgroup/15min\" rel=\"noopener noreferrer\" style=\"color: black;\">here</a><span style=\"color: black;\">. </span></p><p><br></p><p>I look forward to hearing from you!</p><p><span style=\"color: black;\">Kind regards,</span></p></div>",
+  "response_html": null,
+  "subject": "Discount: World Data Summit 2022",
+  "use_html": 0
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Email Template",
+  "modified": "2022-01-31 10:09:57.944563",
+  "name": "Sponsor - World Data Summit - Amsterdam",
+  "response": "<div class=\"ql-editor read-mode\"><p>Hi {{ first_name }},</p><p><br></p><p>Thank you very much for your request!</p><p><br></p><p>My name is Anna and I am the Project Director of the<strong> <a href=\"https://worlddatasummit.com/\" rel=\"noopener noreferrer\">World Data Summit</a></strong>, which will take place on May 18-20, 2022. Please click the links below to get more information about the agenda, venue and registration terms:</p><ol><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"></span><a href=\"https://worlddatasummit.com/WDS2022.pdf\" rel=\"noopener noreferrer\">Event program</a></li><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"></span>Location: <a href=\"https://goo.gl/maps/DWTU6C3hq84gjr7e7\" rel=\"noopener noreferrer\">Postillion Hotel &amp; Convention Centre Amsterdam</a><strong> </strong></li><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"></span><a href=\"https://worlddatasummit.com/online-registration/\" rel=\"noopener noreferrer\">Online registration page</a></li></ol><p> &nbsp; &nbsp;<em>*for our live event partners we are happy to modify any package to meet your needs </em></p><p><br></p><p>Additionally, please find enclosed a list of our past attendees to get a better understanding of the event. Our event is built for good networking, check out the photos from World Data Summit 2019&nbsp;<a href=\"https://worlddatasummit.com/gallery-2019/\" rel=\"noopener noreferrer\">here</a>&nbsp;and the video&nbsp;<a href=\"https://youtu.be/thudzEmDK_4\" rel=\"noopener noreferrer\">here</a>. Due to the current situation in the World, we organized a series of complimentary webinars to keep knowledge exchange and networking. That is why I suggest exploring our virtual gatherings. Request any recording of your interest <a href=\"https://giavirtual.com/webinars_archive\" rel=\"noopener noreferrer\">here</a>.</p><p><br></p><p>Do not hesitate to contact me for more details. Feel free to schedule a call with me <a href=\"https://calendly.com/anna-giaglobalgroup/15min\" rel=\"noopener noreferrer\">here</a>. I look forward to hearing from you!</p></div>",
+  "response_html": null,
+  "subject": "Sponsor - World Data Summit - Amsterdam",
+  "use_html": 0
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Email Template",
+  "modified": "2022-01-31 10:07:29.791451",
+  "name": "Agenda - World Data Summit - Amsterdam",
+  "response": "<div class=\"ql-editor read-mode\"><p>Hi {{ first_name }},</p><p>Thank you very much for the agenda request!</p><p>My name is Anna and I am the Project Director of the<strong> <a href=\"https://worlddatasummit.com/\" rel=\"noopener noreferrer\">World Data Summit</a></strong>, which will take place on May 18-20, 2022. Please click links below to get more information about the agenda, venue and registration terms:</p><ol><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"></span><a href=\"https://worlddatasummit.com/WDS2022.pdf\" rel=\"noopener noreferrer\">Event program</a></li><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"></span>Location: <a href=\"https://goo.gl/maps/DWTU6C3hq84gjr7e7\" rel=\"noopener noreferrer\">Postillion Hotel &amp; Convention Centre Amsterdam</a><strong> </strong></li><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"></span><a href=\"https://worlddatasummit.com/online-registration/\" rel=\"noopener noreferrer\">Online registration page</a><em> </em></li></ol><p>Additionally, please find enclosed list of our past attendees to get a better understanding about the event. Our event is built for a good networking, check out the photos from World Data Summit 2019&nbsp;<a href=\"https://worlddatasummit.com/gallery-2019/\" rel=\"noopener noreferrer\">here</a>&nbsp;and video&nbsp;<a href=\"https://youtu.be/thudzEmDK_4\" rel=\"noopener noreferrer\">here</a>. </p><p>We look forward to welcoming you at the World Data Summit! Do not hesitate to contact me for more details. </p><p>Kind regards,</p></div>",
+  "response_html": null,
+  "subject": "Agenda - World Data Summit - Amsterdam",
+  "use_html": 0
+ }
+]

@@ -1,0 +1,30 @@
+{
+ "attach_print": 0,
+ "channel": "Email",
+ "condition": "",
+ "creation": "2022-07-07 13:39:08.865879",
+ "days_in_advance": 0,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "Request",
+ "enabled": 0,
+ "event": "Value Change",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "<h3>{{_(\"New Follow Up Request\")}}</h3>\n\n<p>{{ _(\"New follow up task has been assigned to the :- \") }} {{ doc.name }}</p>",
+ "modified": "2022-07-14 13:40:24.691984",
+ "modified_by": "Administrator",
+ "module": "Gia Events",
+ "name": "New Follow Up Request",
+ "owner": "Administrator",
+ "recipients": [
+  {
+   "receiver_by_role": "Accounts User"
+  }
+ ],
+ "send_system_notification": 1,
+ "send_to_all_assignees": 0,
+ "sender_email": "erpnextafrica@gmail.com",
+ "subject": "New Responsible Person: {{ doc.name }}",
+ "value_changed": "next_contact_by"
+}

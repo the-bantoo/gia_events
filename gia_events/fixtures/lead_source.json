@@ -1,0 +1,26 @@
+[
+ {
+  "details": null,
+  "docstatus": 0,
+  "doctype": "Lead Source",
+  "modified": "2022-01-26 08:39:49.634874",
+  "name": "Linkedin",
+  "source_name": "Linkedin"
+ },
+ {
+  "details": null,
+  "docstatus": 0,
+  "doctype": "Lead Source",
+  "modified": "2022-01-27 08:24:02.600499",
+  "name": "Online Registration",
+  "source_name": "Online Registration"
+ },
+ {
+  "details": null,
+  "docstatus": 0,
+  "doctype": "Lead Source",
+  "modified": "2022-02-04 08:56:56.157960",
+  "name": "Xing Registration",
+  "source_name": "Xing Registration"
+ }
+]

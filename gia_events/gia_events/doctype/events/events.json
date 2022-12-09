@@ -1,0 +1,240 @@
+{
+ "actions": [],
+ "autoname": "field:event_name",
+ "creation": "2021-12-20 13:49:36.204872",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "sec_1",
+  "event_name",
+  "event_start_date",
+  "type",
+  "project_name",
+  "event_venue",
+  "column_break_4",
+  "country",
+  "level",
+  "status",
+  "sec_2",
+  "schedule",
+  "sec_4",
+  "speakers",
+  "sec_5",
+  "attendees",
+  "sec_6",
+  "media",
+  "sec_7",
+  "sponsors",
+  "sec_8",
+  "sponsor_group",
+  "attendee_group",
+  "col_1",
+  "speaker_group",
+  "sub_group"
+ ],
+ "fields": [
+  {
+   "fieldname": "event_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Event Name",
+   "unique": 1
+  },
+  {
+   "fieldname": "type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Type",
+   "options": "\nSeminar\nTheory\nWorkshop\nConference\nExam\nInternet\nSelf-Study\nTraining Program"
+  },
+  {
+   "fieldname": "level",
+   "fieldtype": "Select",
+   "label": "Level",
+   "options": "\nBeginner\nIntermediate\nAdvanced"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nScheduled\nCompleted\nCanceled\nPostponed\nRegistration\nUpcoming"
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "speakers",
+   "fieldtype": "Table",
+   "label": "Speakers",
+   "options": "Speaker Table"
+  },
+  {
+   "fieldname": "attendees",
+   "fieldtype": "Table",
+   "label": "Attendees",
+   "options": "Attendee Table"
+  },
+  {
+   "fieldname": "media",
+   "fieldtype": "Table",
+   "label": "Media",
+   "options": "Media Table"
+  },
+  {
+   "fieldname": "sec_1",
+   "fieldtype": "Section Break",
+   "label": "Event Details"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "sec_2",
+   "fieldtype": "Section Break"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "sec_4",
+   "fieldtype": "Section Break",
+   "label": "Event Speakers"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "sec_5",
+   "fieldtype": "Section Break",
+   "label": "Event Attendees"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "sec_6",
+   "fieldtype": "Section Break",
+   "label": "Media Partners"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "sec_7",
+   "fieldtype": "Section Break",
+   "label": "Event Sponsors"
+  },
+  {
+   "fieldname": "schedule",
+   "fieldtype": "Table",
+   "label": "Event Schedule",
+   "options": "Event Schedule"
+  },
+  {
+   "fieldname": "project_name",
+   "fieldtype": "Link",
+   "label": "Project Name",
+   "options": "Project"
+  },
+  {
+   "fieldname": "sponsors",
+   "fieldtype": "Table",
+   "label": "Sponsor",
+   "options": "Sponsor Table"
+  },
+  {
+   "fieldname": "event_venue",
+   "fieldtype": "Link",
+   "label": "Venue",
+   "options": "Venue"
+  },
+  {
+   "fieldname": "country",
+   "fieldtype": "Link",
+   "label": "Country",
+   "options": "Country"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "sec_8",
+   "fieldtype": "Section Break",
+   "label": "Email Groups"
+  },
+  {
+   "fieldname": "sponsor_group",
+   "fieldtype": "Link",
+   "label": "Sponsor Email Group",
+   "options": "Email Group"
+  },
+  {
+   "fieldname": "attendee_group",
+   "fieldtype": "Link",
+   "label": "Attendee Email Group",
+   "options": "Email Group"
+  },
+  {
+   "fieldname": "speaker_group",
+   "fieldtype": "Link",
+   "label": "Speaker Email Group",
+   "options": "Email Group"
+  },
+  {
+   "fieldname": "sub_group",
+   "fieldtype": "Link",
+   "label": "Newsletter Email Group",
+   "options": "Email Group"
+  },
+  {
+   "fieldname": "col_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "event_start_date",
+   "fieldtype": "Date",
+   "label": "Event Start Date",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "group": "Registration & Requests",
+   "link_doctype": "Request",
+   "link_fieldname": "event_name"
+  },
+  {
+   "group": "Registration & Requests",
+   "link_doctype": "Speaker Form",
+   "link_fieldname": "event_name"
+  },
+  {
+   "group": "Sales",
+   "link_doctype": "Sales Invoice",
+   "link_fieldname": "event"
+  },
+  {
+   "group": "Registration & Requests",
+   "link_doctype": "Discount Request",
+   "link_fieldname": "event_name"
+  },
+  {
+   "group": "Event Newsletter",
+   "link_doctype": "Newsletter",
+   "link_fieldname": "event_name"
+  }
+ ],
+ "modified": "2022-07-07 14:34:30.285080",
+ "modified_by": "Administrator",
+ "module": "Gia Events",
+ "name": "Events",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

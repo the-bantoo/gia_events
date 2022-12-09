@@ -1,0 +1,47 @@
+{
+ "actions": [],
+ "creation": "2021-08-24 18:21:05.175877",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "media_name",
+  "email_address",
+  "media_type"
+ ],
+ "fields": [
+  {
+   "fieldname": "email_address",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Email Address",
+   "options": "Media Partner",
+   "reqd": 1
+  },
+  {
+   "fieldname": "media_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Media Partner Name"
+  },
+  {
+   "fieldname": "media_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Type Of Media",
+   "options": "\nPhotography\nVideo Recording\nAll\nOther"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2022-01-05 09:47:02.595542",
+ "modified_by": "Administrator",
+ "module": "Gia Events",
+ "name": "Media Table",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

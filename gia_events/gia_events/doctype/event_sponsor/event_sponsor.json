@@ -1,0 +1,118 @@
+{
+ "actions": [],
+ "autoname": "sponsor_name",
+ "creation": "2022-01-04 16:30:29.203040",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "sponsor_name",
+  "contact_person",
+  "sponsor_type",
+  "c1",
+  "title",
+  "email_address",
+  "phone_number",
+  "sec_1",
+  "country",
+  "city",
+  "col_2",
+  "postalzip_code",
+  "address"
+ ],
+ "fields": [
+  {
+   "fieldname": "sponsor_name",
+   "fieldtype": "Data",
+   "label": "Sponsor Name"
+  },
+  {
+   "fieldname": "sponsor_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Sponsor Type",
+   "options": "\nIndividual\nPhilanthropist\nCompany\nNGO\nNon-Profit\nOther"
+  },
+  {
+   "fieldname": "title",
+   "fieldtype": "Select",
+   "label": "Title",
+   "options": "\nMr.\nMrs.\nMs.\nSir.\nProf.\nDr.\nHon."
+  },
+  {
+   "fieldname": "email_address",
+   "fieldtype": "Data",
+   "label": "Email Address",
+   "options": "Email"
+  },
+  {
+   "fieldname": "phone_number",
+   "fieldtype": "Data",
+   "label": "Phone Number",
+   "options": "Phone"
+  },
+  {
+   "fieldname": "address",
+   "fieldtype": "Data",
+   "label": "Address"
+  },
+  {
+   "fieldname": "city",
+   "fieldtype": "Data",
+   "label": "City"
+  },
+  {
+   "fieldname": "country",
+   "fieldtype": "Data",
+   "label": "Country"
+  },
+  {
+   "fieldname": "postalzip_code",
+   "fieldtype": "Data",
+   "label": "Postal/Zip Code"
+  },
+  {
+   "fieldname": "c1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "contact_person",
+   "fieldtype": "Data",
+   "label": "Representative Name"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "sec_1",
+   "fieldtype": "Section Break",
+   "label": "Address"
+  },
+  {
+   "fieldname": "col_2",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2022-01-12 21:44:44.767365",
+ "modified_by": "Administrator",
+ "module": "Gia Events",
+ "name": "Event Sponsor",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

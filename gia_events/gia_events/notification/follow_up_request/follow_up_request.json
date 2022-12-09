@@ -1,0 +1,29 @@
+{
+ "attach_print": 0,
+ "channel": "Email",
+ "creation": "2022-07-25 18:49:16.642853",
+ "days_in_advance": 0,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "Request",
+ "enabled": 0,
+ "event": "Value Change",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "<h3>New Follow Up Assignment</h3>\n\n<p>You have been assigned to the {{ doc.name }}. Please take necessary action.</p>",
+ "modified": "2022-07-25 19:16:08.939025",
+ "modified_by": "Administrator",
+ "module": "Gia Events",
+ "name": "Follow Up Request",
+ "owner": "Administrator",
+ "recipients": [
+  {
+   "receiver_by_document_field": "next_contact_by"
+  }
+ ],
+ "send_system_notification": 1,
+ "send_to_all_assignees": 0,
+ "sender_email": "annab@worlddatasummit.com",
+ "subject": "New Responsible Person: {{ doc.name }}",
+ "value_changed": "next_contact_by"
+}
