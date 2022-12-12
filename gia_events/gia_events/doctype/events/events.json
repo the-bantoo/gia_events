@@ -215,10 +215,11 @@
    "link_fieldname": "event_name"
   }
  ],
- "modified": "2022-07-07 14:34:30.285080",
+ "modified": "2022-12-09 13:22:48.697110",
  "modified_by": "Administrator",
- "module": "Gia Events",
+ "module": "GIA Events",
  "name": "Events",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
@@ -236,5 +237,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "track_changes": 1
 }

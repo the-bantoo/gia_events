@@ -73,7 +73,6 @@
   "col_7",
   "city",
   "country",
-  "data_68",
   "follow_up_section",
   "next_contact_by",
   "column_break_58",
@@ -87,8 +86,7 @@
   "gdpr_section",
   "gdpr_compliance_update",
   "section_break_79",
-  "amended_from",
-  "column_break_80"
+  "amended_from"
  ],
  "fields": [
   {
@@ -481,10 +479,6 @@
    "label": "Ends On"
   },
   {
-   "fieldname": "data_68",
-   "fieldtype": "Data"
-  },
-  {
    "fieldname": "column_break_58",
    "fieldtype": "Column Break"
   },
@@ -527,17 +521,13 @@
   {
    "fieldname": "section_break_79",
    "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "column_break_80",
-   "fieldtype": "Column Break"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-12-08 07:03:13.462775",
+ "modified": "2022-12-09 16:17:46.015284",
  "modified_by": "Administrator",
- "module": "Gia Events",
+ "module": "GIA Events",
  "name": "Request",
  "naming_rule": "Expression (old style)",
  "owner": "Administrator",

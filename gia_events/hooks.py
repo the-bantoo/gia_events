@@ -100,7 +100,7 @@ app_license = "MIT"
 
 doc_events = {
     "Request": {
-        "on_update": "gia_events.api.attendee_exists",
+        "after_insert": "gia_events.api.attendee_exists",
         "validate": "gia_events.api.verify"
 	},
     "Speaker": {
@@ -112,24 +112,28 @@ doc_events = {
     "Discount Request": {
         "after_insert": "gia_events.api.email_member"
     },
-    "Lead": {
-        "validate": "gia_events.api.email_group",
-        "after_insert": "gia_events.api.link_lead"
-	},
-    "Newsletter": {
-        "on_update": "gia_events.api.update_link_newsletter",
-    },
-    "Email Queue": {
-        "after_insert": "gia_events.api.add_pixel_tracker",
-    },
     "Events": {
         "after_insert": "gia_events.api.create_project",
 	},
     "Project": {
         "after_insert": "gia_events.api.add_project",
 	},
+    "Lead": {
+        "validate": "gia_events.api.email_group",
+        "after_insert": "gia_events.api.link_lead"
+	},
  }
+"""
 
+    
+    
+"Newsletter": {
+        #"on_update": "gia_events.api.update_link_newsletter",
+    },
+    "Email Queue": {
+        #"after_insert": "gia_events.api.add_pixel_tracker",
+    },
+"""
 # Scheduled Tasks
 # ---------------
 

@@ -6,25 +6,25 @@
  "docstatus": 0,
  "doctype": "Notification",
  "document_type": "Lead",
- "enabled": 1,
- "event": "Value Change",
+ "enabled": 0,
+ "event": "Submit",
  "idx": 0,
  "is_standard": 1,
  "message": "{{ doc.contact_by }} has been assigned to the {{ doc.name }}",
- "modified": "2021-08-04 12:21:33.455836",
- "modified_by": "support@thebantoo.com",
- "module": "Gia Events",
+ "modified": "2022-12-11 18:01:01.138022",
+ "modified_by": "Administrator",
+ "module": "GIA Events",
  "name": "New Responsible Person",
  "owner": "support@thebantoo.com",
  "recipients": [
   {
-   "receiver_by_role": "SMM"
+   "receiver_by_role": "Event Manager"
   }
  ],
- "send_system_notification": 1,
+ "send_system_notification": 0,
  "send_to_all_assignees": 0,
- "sender": "GIA Events",
- "sender_email": "erpnextafrica@gmail.com",
+ "sender": "Testing Acc",
+ "sender_email": "hello@thebantoo.com",
  "subject": "New Responsible Person: {{ doc.name }}",
  "value_changed": "contact_by"
 }

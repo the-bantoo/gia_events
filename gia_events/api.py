@@ -11,6 +11,11 @@ from twilio.rest import Client
 import os
 from twilio.twiml.voice_response import Dial, VoiceResponse, Say
 from frappe.utils.password import get_decrypted_password
+
+
+def p(*args):
+	if True:
+		print(*args)
 				
 def email_group(lead, method):
 	if str(lead.workflow_state) == "Confirmed":
@@ -100,30 +105,34 @@ def make_call(to_number, logged_in_user):
 
 	client = Client(account_sid, d_pass)
 
-	erpnext_caller_number = frappe.db.get_value("User", {"email": logged_in_user}, "phone")
+	try:
+		erpnext_caller_number = frappe.db.get_value("User", {"email": logged_in_user}, "phone")
 
-	call = client.calls.create(
-		record=True,
-		to=str(to_number),
-		from_=str(twilio_number),
-		url="http://twimlets.com/holdmusic?Bucket=com.twilio.music.ambient",
-		twiml=f'<Response><Dial>{erpnext_caller_number}</Dial></Response>'
-		#url="https://crm.giaglobalgroup.com/twilio_call/voice.xml"
+		call = client.calls.create(
+			record=True,
+			to=str(to_number),
+			from_=str(twilio_number),
+			url="http://twimlets.com/holdmusic?Bucket=com.twilio.music.ambient",
+			twiml=f'<Response><Dial>{erpnext_caller_number}</Dial></Response>'
+			#url="https://crm.giaglobalgroup.com/twilio_call/voice.xml"
 
-	)
+		)
 
-	new = frappe.get_doc({
-		"doctype": 'GIA Call Log',
-		"from": str(twilio_number),
-		"to": str(to_number),
-		"type_of_call": 'Outgoing',
-		"status": call.status,
-		"duration": call.duration,
-		"date": call.date_created,
-	})
-	new.flags.ignore_permission = True
-	frappe.msgprint("Calling 📞 {to_number}".format(to_number=to_number))
-	new.insert()
+		new = frappe.get_doc({
+			"doctype": 'GIA Call Log',
+			"from": str(twilio_number),
+			"to": str(to_number),
+			"type_of_call": 'Outgoing',
+			"status": call.status,
+			"duration": call.duration,
+			"date": call.date_created,
+		})
+		new.flags.ignore_permission = True
+		frappe.msgprint(_("Calling 📞 {to_number}").format(to_number=to_number))
+		new.insert()
+
+	except Exception as e:
+		frappe.throw(str(e))
 
 """@frappe.whitelist(allow_guest=True)
 def multiple_calls(x, y):
@@ -194,7 +203,7 @@ def check_number(phone_number):
 def update_link_newsletter(newsletter, method):
 	data = newsletter.message
 
-	patterns = {"link": "href\=\"(.*?)\" rel"}
+	patterns = {"link": 'href rel'}
 	site_url = frappe.utils.get_url()
 
 	for pattern in patterns.values():
@@ -275,9 +284,7 @@ def link_lead(lead, method):
 def email_member(discount_request, method):
 	event = frappe.get_doc("Events", discount_request.event_name)
 	if discount_request.newsletter == True:
-		if frappe.db.exists({'doctype': 'Email Group Member', 'email_group': event.sub_group, 'email': discount_request.corporate_email}):
-			pass
-		else:
+		if not frappe.db.exists({'doctype': 'Email Group Member', 'email_group': event.sub_group, 'email': discount_request.corporate_email}):
 			email_member = frappe.get_doc({
 				"doctype": "Email Group Member",
 				"email": discount_request.corporate_email,
@@ -315,9 +322,8 @@ def attendee_exists(request, method):
 
 	if request.newsletter == True:
 		event = frappe.get_doc("Events", request.event_name)
-		if frappe.db.exists({'doctype': 'Email Group Member', 'email_group': event.sub_group, 'email': request.email_address}):
-			pass
-		else:
+
+		if not frappe.db.exists({'doctype': 'Email Group Member', 'email_group': event.sub_group, 'email': request.email_address}):
 			email_member = frappe.get_doc({
 				"doctype": "Email Group Member",
 				"email": request.email_address,
@@ -325,39 +331,20 @@ def attendee_exists(request, method):
 				})
 			email_member.insert(ignore_permissions=True)
 
-def verify(request, method):
-	if request.workflow_state == "Verify Interest":
-		#Create Designation
-		if frappe.db.exists({"doctype": "Designation", "name": request.job_title}):
-			pass
-		else:
-			new_designation = frappe.get_doc({
-				"doctype": "Designation",
-				"designation_name": request.job_title
-				})
-			new_designation.insert(ignore_permissions=True)
-			
-		#Create Country
-		if frappe.db.exists({"doctype": "Country", "name": request.country}):
-			pass
-		else:
-			new_country = frappe.get_doc({
-				"doctype": "Country",
-				"country_name": request.country
-				})
-			new_country.insert(ignore_permissions=True)
+def ep(arg):
+    frappe.errprint(arg)
 
-		#Create Industry Type
-		if frappe.db.exists({"doctype": "Industry Type", "name": request.industry}):
-			pass
-		else:
-			new_industry = frappe.get_doc({
-				"doctype": "Industry Type",
-				"industry": request.industry
-				})
-			new_industry.insert(ignore_permissions=True)
+@frappe.whitelist(allow_guest=True)
+def add_lead_to_request(request):
+	# create lead and attach it to the request
 
-		#Create Lead
+	# if origin is javascript
+	if request.__class__ == "<class 'str'>": 
+		request = frappe.get_doc("Request", request)
+	
+	# ep('add_lead_to_request')
+
+	try:
 		if request.already_exists == False:
 			if not request.lead:
 				new_lead = frappe.get_doc({
@@ -371,18 +358,47 @@ def verify(request, method):
 					"email_id": request.email_address,
 					"country": request.country,
 					"phone": request.phone_number,
-					"industry": request.industry,
+					"industry": validate_industry(request.industry),
 					"type": request.type,
 					"request_type": request.interest_type,
-					"type": request.type,
 					"mobile_no": request.phone_number,
 					"lead_number": request.phone_number,
 					"source": request.source
 					})
 				new_lead.insert(ignore_permissions=True)
-				new_lead.add_tag(request.event_name)
-				request.lead = new_lead.name
-		
+				
+				frappe.set_value("Request", request.name, 'lead', new_lead.name)
+				#new_lead.add_tag(request.event_name)
+
+	except Exception as e:
+		frappe.throw(e)
+
+def verify(request, method):
+	print(1)
+	if request.workflow_state == "Verify Interest":
+		#Create Designation
+		if not frappe.db.exists({"doctype": "Designation", "name": request.job_title}):
+			new_designation = frappe.get_doc({
+				"doctype": "Designation",
+				"designation_name": request.job_title
+				})
+			new_designation.insert(ignore_permissions=True)
+			
+		#Create Country
+		if not frappe.db.exists({"doctype": "Country", "name": request.country}):
+			new_country = frappe.get_doc({
+				"doctype": "Country",
+				"country_name": request.country
+				})
+			new_country.insert(ignore_permissions=True)
+
+		#Create Industry Type
+		validate_industry(request.industry)
+
+		# create lead and attach it to the request
+		add_lead_to_request(request)
+
+
 		#Brochure Task
 		if request.request_type == "Brochure Request":
 			event = frappe.get_doc("Events", request.event_name)
@@ -625,6 +641,8 @@ def verify(request, method):
 					})
 				media_partner.insert(ignore_permissions=True)
 				media_partner.add_tag(request.event_name)
+	
+	print(0)
 
 """ Add exhibitor: Media Partner, Sponsor, to email groups """
 
@@ -750,3 +768,305 @@ def add_speaker_to_event(d, method):
 # 	terms.insert(ignore_permissions=True)
 # 	return
 
+
+@frappe.whitelist(allow_guest=True)
+def process_brochure_request(data):
+
+	p(data)
+
+	if frappe.db.exists({'doctype': 'Lead', 'email_id': data['fields[email][value]']}):
+		request_status = True
+	else:
+		request_status = False
+	
+	#check the type of interest.
+	if data['fields[more_about][value]'] == "Speaking":
+		interest = "Speaker"
+	elif data['fields[more_about][value]'] == "Attending":
+		interest = "Attendee"
+	elif data['fields[more_about][value]'] == "Sponsoring":
+		interest = "Sponsor"
+	elif data['fields[more_about][value]'] == "Exhibiting":
+		interest = "Exhibitor"
+
+	if data['fields[acceptance][value]'] == "on":
+		acceptance = True
+	else:
+		acceptance = False
+
+	country = get_country(data['fields[country][value]'])
+
+	
+	brochure_request = frappe.get_doc({
+		"doctype": "Request",
+		"request_type": "Brochure Request",
+		"event_name": data['fields[event_name][value]'],
+		"already_exists": request_status,
+		"newsletter": acceptance,
+		"source": "Online Registration",
+		"first_name": data['fields[f_name][value]'],
+		"last_name": data['fields[l_name][value]'],
+		"full_name": data['fields[f_name][value]'] + " " + data['fields[l_name][value]'],
+		"job_title": data['fields[job_title][value]'],
+		"company": data['fields[company][value]'],
+		"email_address": data['fields[email][value]'],
+		"phone_number": data['fields[phone][value]'],
+		"country": country,
+		"interest_type": data['fields[more_about][value]'],
+		"type": interest
+		})
+	brochure_request.insert(ignore_permissions=True)
+
+	return
+
+
+@frappe.whitelist(allow_guest=True)
+def process_speaker_form(data):
+	p(data)
+	
+	if not data['fields[email][value]']:
+		return "improper data"
+	
+	speaker_form = frappe.get_doc({
+		"doctype": "Speaker Form",
+		"event_name": data['fields[event_name][value]'],
+		"data_consent": True,
+		"full_name": data['fields[f_name][value]'] + " " + data['fields[l_name][value]'],
+		"job_title": data['fields[job_title][value]'],
+		"company": data['fields[company][value]'],
+		"email_address": data['fields[email][value]'],
+		"phone_number": data['fields[mobile_phone][value]'],
+		"corporate_number": data['fields[phone][value]'],
+		"country": data['fields[country][value]'],
+		"speaker_bio": str(data['fields[biography][value]']),
+		"topic": str(data['fields[presentation_title][value]']),
+		"bullet_points": str(data['fields[bullet_points][value]']),
+		"interested_session": data['fields[interested][value]'],
+		"profile_image": data['fields[file][value]']
+		})
+	speaker_form.insert(ignore_permissions=True)
+	return
+
+@frappe.whitelist(allow_guest=True)
+def process_speaker_request(data):
+
+	if not data['fields[email][value]']:
+		return "improper data"
+
+	p(data)
+	
+	if frappe.db.exists({'doctype': 'Lead', 'email_id': data['fields[email][value]']}):
+		request_status = True
+	else:
+		request_status = False
+
+	if data['fields[acceptance][value]'] == "on":
+		acceptance = True
+	else:
+		acceptance = False
+
+	country = get_country(data['fields[country][value]'])
+	 
+	speaker_request = frappe.get_doc({
+		"doctype": "Request",
+		"request_type": "Speaker Request",
+		"event_name": data['fields[event_name][value]'],
+		"already_exists": request_status,
+		"first_name": data['fields[f_name][value]'],
+		"newsletter": acceptance,
+		"source": "Online Registration",
+		"last_name": data['fields[l_name][value]'],
+		"full_name": data['fields[f_name][value]'] + " " + data['fields[l_name][value]'],
+		"job_title": data['fields[job_title][value]'],
+		"company": data['fields[company][value]'],
+		"email_address": data['fields[email][value]'],
+		"phone_number": data['fields[phone][value]'],
+		"country": country,
+		"interest_type": data['fields[more_about][value]'],
+		"type": "Speaker",
+		"speaker_bio": str(data['fields[speaker_bio][value]']),
+		"topic": str(data['fields[topic][value]'])
+		})
+	speaker_request.insert(ignore_permissions=True)
+
+@frappe.whitelist(allow_guest=True)
+def get_country(country):
+
+	existing_country = frappe.get_list("Country", limit=1, or_filters=[
+			['name', 'like', '%{country}%'.format(country=country)],
+			['code', 'like', '%{country}%'.format(country=country)],
+		])
+
+	if len(existing_country) > 0: 
+		country = existing_country[0].name
+	else: 
+		doc = frappe.get_doc({
+			"doctype": "Country",
+			"country_name": country
+		})
+		doc.insert(ignore_permissions=True)
+
+	return country
+
+@frappe.whitelist(allow_guest=True)
+def process_free_virtual_request(data):
+	p(data)
+
+	if not data['fields[email][value]']:
+		return "improper data"
+
+	if frappe.db.exists({'doctype': 'Lead', 'email_id': data['fields[email][value]']}):
+		request_status = True
+	else:
+		request_status = False
+
+	if data['fields[acceptance][value]'] == "on":
+		privacy_concent = True
+	else:
+		privacy_concent = False
+
+	if data['fields[acceptance2][value]'] == "on":
+		data_concent = True
+	else:
+		data_concent = False
+
+	free_request = frappe.get_doc({
+		"doctype": "Request",
+		"request_type": "Free Virtual Guest Request",
+		"event_name": data['fields[event_name][value]'],
+		"already_exists": request_status,
+		"source": "Online Registration",
+		"first_name": data['fields[f_name][value]'],
+		"newsletter": data['fields[acceptance][value]'],
+		"last_name": data['fields[l_name][value]'],
+		"full_name": data['fields[f_name][value]'] + " " + data['fields[l_name][value]'],
+		"job_title": data['fields[job_title][value]'],
+		"company": data['fields[company][value]'],
+		"email_address": data['fields[email][value]'],
+		"phone_number": data['fields[phone][value]'],
+		"country": get_country(data['fields[country][value]']),
+		"attendance_type": "Online",
+		"interest_type": "Attending",
+		"type": "Attendee",
+		"industry": validate_industry(data['fields[industry][value]']),
+		"terms_conditions": privacy_concent,
+		"data_concent": data_concent,
+		"payment_status": "Free"
+		})
+	free_request.insert(ignore_permissions=True)
+
+@frappe.whitelist(allow_guest=True)
+def process_free_virtual_request(data):
+	p(data)
+
+	if not data['fields[email][value]']:
+		return "improper data"
+
+	if frappe.db.exists({'doctype': 'Lead', 'email_id': data['fields[email][value]']}):
+		request_status = True
+	else:
+		request_status = False
+
+	if data['fields[acceptance][value]'] == "on":
+		acceptance = True
+	else:
+		acceptance = False
+		
+	sponsor_request = frappe.get_doc({
+		"doctype": "Request",
+		"request_type": "Sponsor Request",
+		"event_name": data['fields[event_name][value]'],
+		"already_exists": request_status,
+		"first_name": data['fields[f_name][value]'],
+		"newsletter": acceptance,
+		"source": "Online Registration",
+		"last_name": data['fields[l_name][value]'],
+		"full_name": data['fields[f_name][value]'] + " " + data['fields[l_name][value]'],
+		"job_title": data['fields[job_title][value]'],
+		"company": data['fields[company][value]'],
+		"email_address": data['fields[email][value]'],
+		"phone_number": data['fields[phone][value]'],
+		"country": get_country(data['fields[country][value]']),
+		"interest_type": data['fields[more_about][value]'],
+		"type": "Sponsor"
+		})
+	sponsor_request.insert(ignore_permissions=True)
+
+
+def validate_industry(industry=None):
+	industry = industry if (industry and industry != '') else 'Not Captured'
+
+	if not frappe.db.exists("Industry Type", {'industry': industry}):
+		doc = frappe.get_doc({
+			'doctype': 'Industry Type',
+			'industry': industry
+		})
+		doc.insert(ignore_permissions=True)
+
+	return industry
+
+
+
+@frappe.whitelist(allow_guest=True)
+def process_free_request(data):
+	p(data)
+
+	if not data['fields[email][value]']:
+		return "improper data"
+
+	if frappe.db.exists({'doctype': 'Lead', 'email_id': data['fields[email][value]']}):
+		request_status = True
+	else:
+		request_status = False
+
+	if data['fields[acceptance][value]'] == "on":
+		privacy_concent = True
+	else:
+		privacy_concent = False
+
+	if data['fields[acceptance2][value]'] == "on":
+		data_concent = True
+	else:
+		data_concent = False
+
+	free_request = frappe.get_doc({
+		"doctype": "Request",
+		"request_type": "Free Guest Request",
+		"event_name": data['fields[event_name][value]'],
+		"already_exists": request_status,
+		"source": "Online Registration",
+		"first_name": data['fields[f_name][value]'],
+		"last_name": data['fields[l_name][value]'],
+		"full_name": data['fields[f_name][value]'] + " " + data['fields[l_name][value]'],
+		"job_title": data['fields[job_title][value]'],
+		"company": data['fields[company][value]'],
+		"email_address": data['fields[email][value]'],
+		"phone_number": data['fields[phone][value]'],
+		"country": get_country(data['fields[country][value]']),
+		"interest_type": "Attending",
+		"attendance_type": "In-Person",
+		"type": "Attendee",
+		"industry": validate_industry(data['fields[industry][value]']),
+		"terms_conditions": privacy_concent,
+		"data_consent": data_concent,
+		"payment_status": "Free"
+		})
+	free_request.insert(ignore_permissions=True)
+
+@frappe.whitelist(allow_guest=True)
+def process_discount_request(data):
+
+	if not data['fields[corporate_email][value]']:
+		return "improper data"
+
+	p(data)
+	new_discount = frappe.get_doc({
+		"doctype": "Discount Request",
+		"full_name": data['fields[full_name][value]'],
+		"company_name": data['fields[company_name][value]'],
+		"corporate_email": data['fields[corporate_email][value]'],
+		"event_name": data['fields[event_name][value]'],
+		"newsletter": True
+		})
+	new_discount.insert(ignore_permissions=True)
+	return 
