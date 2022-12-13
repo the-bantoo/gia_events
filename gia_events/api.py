@@ -16,6 +16,10 @@ from frappe.utils.password import get_decrypted_password
 def p(*args):
 	if True:
 		print(*args)
+
+def ep(arg):
+	if True:
+		frappe.errprint(arg)
 				
 def email_group(lead, method):
 	if str(lead.workflow_state) == "Confirmed":
@@ -54,8 +58,8 @@ def register_click(link):
 		"original_url": link
 	})
 	if url:
-		frappe.errprint(url)  
-		frappe.errprint(url[0])
+		# frappe.errprint(url)  
+		# frappe.errprint(url[0])
 		#original_url = frappe.db.sql("""SELECT original_url FROM `tabEmail Links` WHERE """)
 		#Get current click count
 		click_count = frappe.db.sql("""SELECT click_rate FROM `tabEmail Links` WHERE name=%s """, url[0])
@@ -331,8 +335,6 @@ def attendee_exists(request, method):
 				})
 			email_member.insert(ignore_permissions=True)
 
-def ep(arg):
-    frappe.errprint(arg)
 
 @frappe.whitelist(allow_guest=True)
 def add_lead_to_request(request):
