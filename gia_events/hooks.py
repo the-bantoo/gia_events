@@ -99,40 +99,38 @@ app_license = "MIT"
 # }
 
 doc_events = {
-    "Request": {
-        "after_insert": "gia_events.api.attendee_exists",
-        "validate": "gia_events.api.verify"
+	"Request": {
+		"after_insert": "gia_events.api.attendee_exists",
+		"validate": "gia_events.api.verify"
 	},
-    "Speaker": {
-        "on_submit": "gia_events.api.add_speaker_to_event"
+	"Speaker": {
+		"on_submit": "gia_events.api.add_speaker_to_event"
 	},
-    "Speaker Form": {
-        "on_submit": "gia_events.api.make_speaker"
+	"Speaker Form": {
+		"on_submit": "gia_events.api.make_speaker"
 	},
-    "Discount Request": {
-        "after_insert": "gia_events.api.email_member"
-    },
-    "Events": {
-        "after_insert": "gia_events.api.create_project",
+	"Discount Request": {
+		"after_insert": "gia_events.api.email_member"
 	},
-    "Project": {
-        "after_insert": "gia_events.api.add_project",
+	"Events": {
+		"after_insert": "gia_events.api.create_project",
 	},
-    "Lead": {
-        "validate": "gia_events.api.email_group",
-        "after_insert": "gia_events.api.link_lead"
+	"Project": {
+		"after_insert": "gia_events.api.add_project",
 	},
- }
-"""
+	"Lead": {
+		"validate": "gia_events.api.email_group",
+		"after_insert": "gia_events.api.link_lead"
+	},
+}
 
-    
-    
+"""   
 "Newsletter": {
-        #"on_update": "gia_events.api.update_link_newsletter",
-    },
-    "Email Queue": {
-        #"after_insert": "gia_events.api.add_pixel_tracker",
-    },
+		#"on_update": "gia_events.api.update_link_newsletter",
+	},
+	"Email Queue": {
+		#"after_insert": "gia_events.api.add_pixel_tracker",
+	},
 """
 # Scheduled Tasks
 # ---------------
@@ -211,119 +209,119 @@ user_data_fields = [
 # ]
 
 fixtures = [
-    {
-        "dt": "Custom Field",
-        "filters": [
-            [
-                "name", "in", [
-                    "Lead-company_size",
-                    "Lead-linkedin_profile_link",
-                    "Lead-t",
-                    "Lead-whatsapp_phone_number",
-                    "Lead-number_of_linkedin_followers",
-                    "Lead-company_details",
-                    "Sales Order-deal_details",
-                    "Sales Order-deal_value",
-                    "Sales Order-deal_detail",
-                    "Sales Order-starting_date",
-                    "Lead-project",
-                    "Lead-region",
-                    "Lead-segmentation",
-                    "Lead-segmentation_no_1",
-                    "Lead-column_break_22",
-                    "Lead-segmentation_details",
-                    "Lead-segmentation_2",
-                    "Lead-segmentation_status",
-                    "Lead-deal_value",
-                    "Lead-event",
-                    "Sales Invoice-event",
-                    "Email Group-event",
-                    "Email Group-hidden",
-                    "Newsletter-event_name",
-                    "Email Group-recipient_type",
-                    "Email Group Member-event",
-                    "Email Group-purpose",
-                    "Lead-workflow_state",
-                    "Lead-mobile_number",
-                    "ToDo-subject",
-                    "Communication-gia",
-                    "Communication-newsletter",
-                    "Communication-communication_status",
-                    "Communication-email_links"
-                ]
-            ],
-        ]
+	{
+		"dt": "Custom Field",
+		"filters": [
+			[
+				"name", "in", [
+					"Lead-company_size",
+					"Lead-linkedin_profile_link",
+					"Lead-t",
+					"Lead-whatsapp_phone_number",
+					"Lead-number_of_linkedin_followers",
+					"Lead-company_details",
+					"Sales Order-deal_details",
+					"Sales Order-deal_value",
+					"Sales Order-deal_detail",
+					"Sales Order-starting_date",
+					"Lead-project",
+					"Lead-region",
+					"Lead-segmentation",
+					"Lead-segmentation_no_1",
+					"Lead-column_break_22",
+					"Lead-segmentation_details",
+					"Lead-segmentation_2",
+					"Lead-segmentation_status",
+					"Lead-deal_value",
+					"Lead-event",
+					"Sales Invoice-event",
+					"Email Group-event",
+					"Email Group-hidden",
+					"Newsletter-event_name",
+					"Email Group-recipient_type",
+					"Email Group Member-event",
+					"Email Group-purpose",
+					"Lead-workflow_state",
+					"Lead-mobile_number",
+					"ToDo-subject",
+					"Communication-gia",
+					"Communication-newsletter",
+					"Communication-communication_status",
+					"Communication-email_links"
+				]
+			],
+		]
 
-    },
-    {
-        "dt": "Workspace",
-        "filters": [
-            [
-                "name", "in", [
-                    "GIA"
-                ]
-            ],
-        ]
+	},
+	{
+		"dt": "Workspace",
+		"filters": [
+			[
+				"name", "in", [
+					"GIA"
+				]
+			],
+		]
 
-    },
-    {
-        "dt": "Email Domain",
-        "filters": [
-            [
-                "name", "in", [
-                    "giaglobalgroup.com",
-                    "worlddatasummit.com",
-                    "worlddatasummit.eu",
-                    "gmail.com"
-                ]
-            ],
-        ]
+	},
+	{
+		"dt": "Email Domain",
+		"filters": [
+			[
+				"name", "in", [
+					"giaglobalgroup.com",
+					"worlddatasummit.com",
+					"worlddatasummit.eu",
+					"gmail.com"
+				]
+			],
+		]
 
-    },
-    {
-        "dt": "Lead Source",
-        "filters": [
-            [
-                "name", "in", [
-                    "Xing Registration",
-                    "Online Registration",
-                    "Linkedin"
-                ]
-            ],
-        ]
+	},
+	{
+		"dt": "Lead Source",
+		"filters": [
+			[
+				"name", "in", [
+					"Xing Registration",
+					"Online Registration",
+					"Linkedin"
+				]
+			],
+		]
 
-    },
-    {
-        "dt": "Email Account",
-        "filters": [
-            [
-                "name", "in", [
-                    "Test",
-                ]
-            ],
-        ]
+	},
+	{
+		"dt": "Email Account",
+		"filters": [
+			[
+				"name", "in", [
+					"Test",
+				]
+			],
+		]
 
-    },
-    {
-        "dt": "Tag"
-    },
-    {
-        "dt": "Email Template"
-    },
-    {
-        "dt": "Industry Type"
-    },
-    {
-        "dt": "Client Script",
-        "filters": [
-            [
-                "name", "in", [
-                    "Newsletter-Form",
-                    "Lead-Form",
-                    "Call Log GIA-Form"
-                ]
-            ],
-        ]
+	},
+	{
+		"dt": "Tag"
+	},
+	{
+		"dt": "Email Template"
+	},
+	{
+		"dt": "Industry Type"
+	},
+	{
+		"dt": "Client Script",
+		"filters": [
+			[
+				"name", "in", [
+					"Newsletter-Form",
+					"Lead-Form",
+					"Call Log GIA-Form"
+				]
+			],
+		]
 
-    }
+	}
 ]

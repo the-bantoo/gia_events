@@ -35,7 +35,11 @@
   {
    "fieldname": "full_name",
    "fieldtype": "Data",
-   "label": "Full Name"
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Full Name",
+   "search_index": 1
   },
   {
    "fieldname": "job_title",
@@ -55,8 +59,12 @@
   {
    "fieldname": "email_address",
    "fieldtype": "Data",
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Email Address",
-   "options": "Email"
+   "options": "Email",
+   "search_index": 1
   },
   {
    "fieldname": "country",
@@ -158,10 +166,11 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-07-22 11:38:51.455630",
+ "modified": "2022-12-12 19:04:13.681127",
  "modified_by": "Administrator",
- "module": "Gia Events",
+ "module": "GIA Events",
  "name": "Speaker Form",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {
@@ -180,6 +189,7 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "title_field": "full_name",
  "track_changes": 1,
  "track_seen": 1

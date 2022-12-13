@@ -19,9 +19,12 @@
   {
    "fieldname": "full_name",
    "fieldtype": "Data",
+   "in_global_search": 1,
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Full Name",
-   "reqd": 1
+   "reqd": 1,
+   "search_index": 1
   },
   {
    "fieldname": "company_name",
@@ -33,7 +36,9 @@
   {
    "fieldname": "corporate_email",
    "fieldtype": "Data",
+   "in_global_search": 1,
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Corporate Email",
    "options": "Email",
    "reqd": 1,
@@ -68,10 +73,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-01-13 10:05:20.167767",
+ "modified": "2022-12-12 18:55:56.219938",
  "modified_by": "Administrator",
- "module": "Gia Events",
+ "module": "GIA Events",
  "name": "Discount Request",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {
@@ -89,5 +95,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "track_changes": 1
 }

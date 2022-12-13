@@ -102,13 +102,19 @@
   {
    "fieldname": "full_name",
    "fieldtype": "Data",
-   "label": "Full Name"
+   "in_global_search": 1,
+   "label": "Full Name",
+   "search_index": 1
   },
   {
    "fieldname": "email_address",
    "fieldtype": "Data",
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Email Address",
-   "options": "Email"
+   "options": "Email",
+   "search_index": 1
   },
   {
    "fieldname": "phone_number",
@@ -523,9 +529,10 @@
    "fieldtype": "Section Break"
   }
  ],
+ "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-12-09 16:17:46.015284",
+ "modified": "2022-12-12 18:47:18.119291",
  "modified_by": "Administrator",
  "module": "GIA Events",
  "name": "Request",
@@ -548,7 +555,10 @@
    "write": 1
   }
  ],
+ "search_fields": "full_name, email_address",
  "sender_field": "email_address",
+ "show_name_in_global_search": 1,
+ "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
