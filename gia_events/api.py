@@ -138,18 +138,6 @@ def make_call(to_number, logged_in_user):
 	except Exception as e:
 		frappe.throw(str(e))
 
-"""@frappe.whitelist(allow_guest=True)
-def multiple_calls(x, y):
-	account_sid = ""
-	auth_token = ""
-	client = Client(account_sid, auth_token)
-
-	call = client.calls.create(
-		to=str(x), str(y)
-		from_="+14422526335",
-		url="http://demo.twilio.com/docs/voice.xml"
-	)"""
-
 @frappe.whitelist(allow_guest=True)
 def answer_call(from_number):
 	ignore_permissions = True
@@ -341,7 +329,7 @@ def add_lead_to_request(request):
 	# create lead and attach it to the request
 
 	# if origin is javascript
-	if request.__class__ == "<class 'str'>": 
+	if type(request) is str: 
 		request = frappe.get_doc("Request", request)
 	
 	# ep('add_lead_to_request')
@@ -1072,3 +1060,58 @@ def process_discount_request(data):
 		})
 	new_discount.insert(ignore_permissions=True)
 	return 
+
+
+@frappe.whitelist(allow_guest=True)
+def log_email_to_lead(doc, method=None):
+	"""
+		recieves a Mailjet Webhook doctype
+
+		verify event type is sent
+		then verify that the lead exists
+		if so, 
+			verify email belongs to a campaign
+				add the email campaign subject activity to the lead
+			else: return
+	"""
+	
+	if type(doc) is str: 
+		doc = frappe.get_doc("Mailjet Webhook Log", doc)
+
+	if doc.event_type != "sent":
+		return
+
+	if not doc.campaign:
+		return
+	
+	if frappe.db.exists({'doctype': 'Lead', 'email_id': doc.email}):
+		
+		campaign = frappe.get_doc("Mailjet Email Campaign", doc.campaign)
+		lead_name = frappe.get_list('Lead', filters={'email_id': doc.email}, pluck='name', limit=1)[0]
+
+		# do insert the email in the activity section
+		from frappe.utils import now
+
+		comm = frappe.get_doc({
+			'doctype': 'Communication',
+			'subject': campaign.title, 
+			'communication_medium': 'Email', 
+			'sender': campaign.sender, 
+			'recipients': doc.email, 
+			'content': 'Campaign Subject: ' + campaign.title, 
+			'text_content': None, 
+			'communication_type': 'Communication', 
+			'status': 'Linked', 
+			'sent_or_received': 'Sent', 
+			'communication_date': now(),  
+			'sender_full_name': 'Mailjet',
+			'reference_doctype': 'Lead', 
+			'reference_name': lead_name, 
+			'reference_owner': 'Administrator', 
+			'user': 'Administrator', 
+			'message_id': '', 
+			'email_status': 'Open',
+			'has_attachment': 1,
+			'docstatus': 1, 
+		})
+		comm.insert(ignore_permissions=True)
