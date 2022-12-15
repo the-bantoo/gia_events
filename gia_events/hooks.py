@@ -120,7 +120,10 @@ doc_events = {
 	},
 	"Lead": {
 		"validate": "gia_events.api.email_group",
-		"after_insert": "gia_events.api.link_lead"
+		"after_insert": [
+				"gia_events.api.link_lead",
+				"gia_events.api.tag_imported_leads"
+			]
 	},
 	"Mailjet Webhook Log": {
 		"after_insert": "gia_events.api.log_email_to_lead"

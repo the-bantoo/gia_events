@@ -358,13 +358,12 @@ def add_lead_to_request(request):
 				new_lead.insert(ignore_permissions=True)
 				
 				frappe.set_value("Request", request.name, 'lead', new_lead.name)
-				#new_lead.add_tag(request.event_name)
+				new_lead.add_tag(request.event_name)
 
 	except Exception as e:
 		frappe.throw(e)
 
 def verify(request, method):
-	print(1)
 	if request.workflow_state == "Verify Interest":
 		#Create Designation
 		if not frappe.db.exists({"doctype": "Designation", "name": request.job_title}):
@@ -631,8 +630,6 @@ def verify(request, method):
 					})
 				media_partner.insert(ignore_permissions=True)
 				media_partner.add_tag(request.event_name)
-	
-	print(0)
 
 """ Add exhibitor: Media Partner, Sponsor, to email groups """
 
@@ -996,7 +993,6 @@ def validate_industry(industry=None):
 	return industry
 
 
-
 @frappe.whitelist(allow_guest=True)
 def process_free_request(data):
 	p(data)
@@ -1115,3 +1111,41 @@ def log_email_to_lead(doc, method=None):
 			'docstatus': 1, 
 		})
 		comm.insert(ignore_permissions=True)
+
+
+def format(tag):
+	tag = tag.strip()
+	return tag[:1].upper() + tag[1:]
+
+
+@frappe.whitelist(allow_guest=True)
+def tag_imported_leads(doc, method=None):
+	"""
+		NEW LEAD INSERTED
+		if import_tags
+			tags = capitalise words then separate tags on comma
+			for tag in tags
+				if not tag exists
+					create
+				add tag to lead
+	"""
+
+	if type(doc) is str: 
+		doc = frappe.get_doc("Lead", doc)
+
+	if doc.import_tags:
+		tags = doc.import_tags.split(",")
+
+		for tag in tags:
+			tag = format(tag)
+
+			if not frappe.db.exists({'doctype': 'Tag', 'name': tag}):
+				miles_teg = frappe.get_doc({
+					'doctype': 'Tag',
+					'name': tag
+				})
+
+				tag = miles_teg.insert(ignore_permissions=True)
+				tag = tag.name
+
+			doc.add_tag(tag)
