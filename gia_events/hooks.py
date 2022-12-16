@@ -119,7 +119,7 @@ doc_events = {
 		"after_insert": "gia_events.api.add_project",
 	},
 	"Lead": {
-		"validate": "gia_events.api.email_group",
+		"on_update": "gia_events.api.email_group",
 		"after_insert": [
 				"gia_events.api.link_lead",
 				"gia_events.api.tag_imported_leads"

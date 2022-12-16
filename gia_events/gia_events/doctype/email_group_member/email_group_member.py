@@ -12,3 +12,6 @@ def on_doctype_update():
 	
 def after_doctype_insert():
 	frappe.db.add_unique("Email Group Member", ("email_group", "email"))
+
+def before_doctype_insert():
+	frappe.db.add_unique("Email Group Member", ("email_group", "email"))

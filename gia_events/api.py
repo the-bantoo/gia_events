@@ -20,24 +20,67 @@ def p(*args):
 def ep(arg):
 	if True:
 		frappe.errprint(arg)
-				
+
+
 def email_group(lead, method):
-	if str(lead.workflow_state) == "Confirmed":
+
+
+	if lead.request_type:
 		data = {"Speaking": "Speakers", "Attending": "Attendees", "Sponsoring": "Sponsors", "Exhibiting": "Media"}
-		pre_email_group = str(lead.event) + " " + data[lead.interest_type]
-		add_email_sub(pre_email_group, lead.email_address, lead.event)
+		email_group = str(lead.event) + " " + data[lead.request_type]
+		group_membership = frappe.get_list('Email Group Member', filters={'email_group': email_group, 'email': lead.email_id})
+
+		ep(email_group)
+
+		if len(group_membership) < 1:
+			sub_to_group(email_group, lead.email_id, lead.event)
+
+	all_group_membership = frappe.get_list('Email Group Member', filters={'email_group': lead.event + " All", 'email': lead.email_id})
+
+	
+	ep(all_group_membership)
+
+	if len(all_group_membership) < 1:
+		add_email_sub_all(lead.email_id, lead.event)
+
+	subscription_update(lead, lead.email_id, lead.event)
+
+	
+
 
 """
 	adds email to particular email group and to "All" email group
 """
-def add_email_sub(email_group, email, event):
+def subscription_update(lead, email, event):
+	membership = frappe.get_list('Email Group Member', fields={'name', 'unsubscribed'}, filters={'email_group': lead.event + " Subscription", 'email': lead.email_id})
+	if len(membership) < 1:
+		
+		all_email_group_member =  frappe.get_doc({
+			"doctype": "Email Group Member",
+			"email_group": str(event) + " Subscription",
+			"event": event,
+			"email": email
+		})
+		all_email_group_member.insert(ignore_permissions=True)
+
+	else:
+		if (membership[0].unsubscribed == 1 and lead.unsubscribed == 0) or (membership[0].unsubscribed == 0 and lead.unsubscribed == 1):
+			m =  frappe.get_doc("Email Group Member", membership[0].name)
+			m.unsubscribed = lead.unsubscribed
+			m.save(ignore_permissions=True)
+
+
+def sub_to_group(email_group, email, event):
+
 	email_group_member =  frappe.get_doc({
 		"doctype": "Email Group Member",
 		"email_group": email_group,
 		"event": event,
 		"email": email
 	})
-	email_group_member.save()
+	email_group_member.insert(ignore_permissions=True)
+
+def add_email_sub_all(email, event):
 
 	all_email_group_member =  frappe.get_doc({
 		"doctype": "Email Group Member",
@@ -45,7 +88,10 @@ def add_email_sub(email_group, email, event):
 		"event": event,
 		"email": email
 	})
-	all_email_group_member.save()
+	all_email_group_member.insert(ignore_permissions=True)
+
+	
+
 
 @frappe.whitelist(allow_guest=True)
 def test_api():
@@ -315,6 +361,8 @@ def attendee_exists(request, method):
 
 	if request.newsletter == True:
 		event = frappe.get_doc("Events", request.event_name)
+		if not event.sub_group:
+			frappe.throw(_("Please set <strong>email groups</strong> in {event}").format(event=event.name))
 
 		if not frappe.db.exists({'doctype': 'Email Group Member', 'email_group': event.sub_group, 'email': request.email_address}):
 			email_member = frappe.get_doc({
@@ -344,7 +392,7 @@ def add_lead_to_request(request):
 					"first_name": request.first_name,
 					"last_name": request.last_name,
 					"lead_name": request.full_name,
-					"designation": request.job_title,
+					"job_title": request.job_title,
 					"company_name": request.company,
 					"email_id": request.email_address,
 					"country": request.country,
@@ -354,8 +402,13 @@ def add_lead_to_request(request):
 					"request_type": request.interest_type,
 					"mobile_no": request.phone_number,
 					"lead_number": request.phone_number,
-					"source": request.source
-					})
+					"address": request.address,
+					"city": request.city,
+					"source": request.source,
+					"unsubscribed": 1 if request.newsletter == 0 else 0,
+					"terms_and_conditions": request.terms_conditions,
+					"data_consent": request.data_consent
+				})
 				new_lead.insert(ignore_permissions=True)
 				
 				frappe.set_value("Request", request.name, 'lead', new_lead.name)
@@ -430,11 +483,24 @@ def verify(request, method):
 		
 	if request.workflow_state == 'Merged':
 		#Update the lead:
+		ep("Update the lead")
+		
 		doc = frappe.get_doc('Lead', request.lead)
+
 		doc.email_id = request.email_address
-		doc.mobile_number = request.phone_number
+		if request.corporate_email:
+			doc.second_email = request.corporate_email
+		doc.address = request.address
+		doc.city = request.city
+		doc.job_title = request.job_title
+		doc.industry = request.industry
+		doc.company_name = request.company
+		if request.corporate_number:
+			doc.phone = request.corporate_number
+		#doc.mobile_number = request.phone_number
 		doc.phone = request.phone_number
 		doc.company_name = request.company
+
 		doc.save()
 
 		#Update the contact entry:
@@ -447,6 +513,13 @@ def verify(request, method):
 				row = doc.append("phone_nos", {
 					"phone": request.phone_number
 					})
+				if request.corporate_number:
+
+					row2 = doc.append("phone_nos", {
+						"phone": request.corporate_number
+						})
+					row2.insert(ignore_permissions=True)
+
 				row.insert(ignore_permissions=True)
 				i += 1
 
@@ -524,6 +597,7 @@ def verify(request, method):
 				
 		elif request.type == "Speaker":
 			if frappe.db.exists({'doctype': 'Speaker', 'email_address': request.email_address}):
+				
 				event = frappe.get_doc('Events', request.event_name)
 				row = event.append("speakers", {
 					"payment_status": request.payment_status,
@@ -531,7 +605,10 @@ def verify(request, method):
 					"attendance_type": request.attendance_type
 					})
 				row.insert()
-				speaker = frappe.get_doc("Speaker", request.email_address)
+
+				speaker_name = frappe.get_list("Speaker", filters={'email_address': request.email_address}, pluck='name', limit=1)[0]
+				
+				speaker = frappe.get_doc("Speaker", speaker_name)
 				speaker.add_tag(request.event_name)
 			else:
 				new_speaker = frappe.get_doc({
@@ -704,6 +781,8 @@ def make_speaker(d, method):
 def speaker_entry_exists(email, event):
 	if frappe.db.exists("Speaker", {"email_address": email, "event_name": event}):
 		return True
+	else:
+		return False
 
 
 def verify_job_title(job_title):
@@ -945,7 +1024,7 @@ def process_free_virtual_request(data):
 
 @frappe.whitelist(allow_guest=True)
 def process_free_virtual_request(data):
-	p(data)
+	ep(data)
 
 	if not data['fields[email][value]']:
 		return "improper data"
@@ -996,7 +1075,7 @@ def validate_industry(industry=None):
 
 @frappe.whitelist(allow_guest=True)
 def process_free_request(data):
-	p(data)
+	ep(data)
 
 	if not data['fields[email][value]']:
 		return "improper data"
