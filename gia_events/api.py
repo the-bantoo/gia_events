@@ -70,6 +70,7 @@ def register_click(link):
 		
 			return frappe.db.sql("""UPDATE `tabEmail Links` SET clicked = 1, click_rate = %s WHERE original_url=%s""", (next_count, link))
 
+
 @frappe.whitelist(allow_guest=True)
 def read_receipt(em_id):
 	doc = frappe.get_doc("Email Queue", em_id)
@@ -1149,3 +1150,5 @@ def tag_imported_leads(doc, method=None):
 				tag = tag.name
 
 			doc.add_tag(tag)
+
+	return
