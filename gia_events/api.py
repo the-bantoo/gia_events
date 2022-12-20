@@ -68,6 +68,8 @@ def subscription_update(lead, email, event):
 			m =  frappe.get_doc("Email Group Member", membership[0].name)
 			m.unsubscribed = lead.unsubscribed
 			m.save(ignore_permissions=True)
+	
+	frappe.db.commit()
 
 
 def sub_to_group(email_group, email, event):
@@ -122,6 +124,8 @@ def read_receipt(em_id):
 	doc = frappe.get_doc("Email Queue", em_id)
 	doc.read_by_recipient = 1
 	doc.save()
+	frappe.db.commit()
+
 
 @frappe.whitelist()
 def call_logs():
@@ -264,6 +268,7 @@ def update_link_newsletter(newsletter, method):
 			
 	#newsletter.message += '<img src="https://script.google.com/macros/s/AKfycbxJUkxR-xCwSHtGh04r3hvQyzcytLRCGwFwyovD3WZvVawx8WI/exec?email_id=%s" height="1" width="1" />' % newsletter.name
 	#newsletter.save()
+	frappe.db.commit()
 
 def add_pixel_tracker(email_queue, method):
 	email_queue.message += '<img src="https://script.google.com/macros/s/AKfycbxJUkxR-xCwSHtGh04r3hvQyzcytLRCGwFwyovD3WZvVawx8WI/exec?email_id=%s" height="1" width="1" />' % email_queue.name
@@ -284,12 +289,14 @@ def add_pixel_tracker(email_queue, method):
 			})
 
 	email_queue.save()
+	frappe.db.commit()
    
 @frappe.whitelist()
 def delete_spam():
 	frappe.db.delete("Request", {
 	"workflow_state": "Spam"
 	})
+	frappe.db.commit()
 	
 
 
@@ -306,19 +313,20 @@ def create_project(event, method):
 		"__newname": event.event_name
 		})
 	new_tag.insert(ignore_permissions=True)
+	frappe.db.commit()
 
 def add_project(project, method):
 	doc = frappe.get_doc("Events", project.project_name)
 	doc.project_name = project.name
 	doc.save()
+	frappe.db.commit()
 
 def link_lead(lead, method):
 	requests = frappe.db.get_list('Request', filters={'email_address': lead.email_id}, fields=['name'])
-	list_size = len(requests)
-	i = 0
-	while i < list_size:
-		frappe.db.set_value("Request", requests[i]['name'], "lead", lead.name)
-		i =+ 1
+	if len(requests) > 0:
+		frappe.db.set_value("Request", requests[0]['name'], "lead", lead.name)
+		frappe.db.commit()
+
 
 def email_member(discount_request, method):
 	event = frappe.get_doc("Events", discount_request.event_name)
@@ -330,6 +338,7 @@ def email_member(discount_request, method):
 				"email_group": event.sub_group
 				})
 			email_member.insert(ignore_permissions=True)
+	frappe.db.commit()
 
 @frappe.whitelist()
 def count_subscribers(email_group):
@@ -371,6 +380,7 @@ def attendee_exists(request, method):
 				"email_group": event.sub_group
 				})
 			email_member.insert(ignore_permissions=True)
+	frappe.db.commit()
 
 
 @frappe.whitelist(allow_guest=True)
@@ -413,6 +423,7 @@ def add_lead_to_request(request):
 				
 				frappe.set_value("Request", request.name, 'lead', new_lead.name)
 				new_lead.add_tag(request.event_name)
+				frappe.db.commit()
 
 	except Exception as e:
 		frappe.throw(e)
@@ -708,6 +719,7 @@ def verify(request, method):
 					})
 				media_partner.insert(ignore_permissions=True)
 				media_partner.add_tag(request.event_name)
+	frappe.db.commit()
 
 """ Add exhibitor: Media Partner, Sponsor, to email groups """
 
@@ -733,6 +745,7 @@ def merge_req(old, new_doc):
 	#    frappe.db.get_value("Request", old, "parent_account"))
 
 	frappe.rename_doc("Request", old, new_doc, merge=1, force=1)
+	frappe.db.commit()
 
 	return new_doc
 
@@ -765,6 +778,7 @@ def make_speaker(d, method):
 		"profile_image": d.profile_image
 	})
 	speaker.insert(ignore_mandatory=True)
+	frappe.db.commit()
 	frappe.msgprint("Speaker successfully created!")
 
 	# add speaker to email groups
@@ -792,6 +806,7 @@ def verify_job_title(job_title):
 			"designation_name": job_title
 			})
 		new_designation.insert(ignore_permissions=True)
+		frappe.db.commit()
 	return
 
 
@@ -800,6 +815,7 @@ def add_event_to_milestone(doc):
 	ms = frappe.get_doc("Milestone", doc)
 	event_name = frappe.get_doc("Request", ms.reference_name).event_name
 	frappe.db.set_value('Milestone', doc, 'event', event_name, update_modified=True)
+	frappe.db.commit()
 
 
 def verify_country_existence(country):
@@ -810,6 +826,7 @@ def verify_country_existence(country):
 			"country_name": country
 			})
 		new_country.insert(ignore_permissions=True)
+		frappe.db.commit()
 	return
 
 @frappe.whitelist()
@@ -824,6 +841,7 @@ def add_speaker_to_event(d, method):
 		"country": d.country,
 		})
 	row.insert(ignore_permissions=True)
+	frappe.db.commit()
 
 # @frappe.whitelist()
 # def lead_terms_conditions_fields(doc):
@@ -883,6 +901,7 @@ def process_brochure_request(data):
 		"type": interest
 		})
 	brochure_request.insert(ignore_permissions=True)
+	frappe.db.commit()
 
 	return
 
@@ -912,6 +931,7 @@ def process_speaker_form(data):
 		"profile_image": data['fields[file][value]']
 		})
 	speaker_form.insert(ignore_permissions=True)
+	frappe.db.commit()
 	return
 
 @frappe.whitelist(allow_guest=True)
@@ -955,6 +975,7 @@ def process_speaker_request(data):
 		"topic": str(data['fields[topic][value]'])
 		})
 	speaker_request.insert(ignore_permissions=True)
+	frappe.db.commit()
 
 @frappe.whitelist(allow_guest=True)
 def get_country(country):
@@ -972,6 +993,7 @@ def get_country(country):
 			"country_name": country
 		})
 		doc.insert(ignore_permissions=True)
+		frappe.db.commit()
 
 	return country
 
@@ -1021,6 +1043,7 @@ def process_free_virtual_request(data):
 		"payment_status": "Free"
 		})
 	free_request.insert(ignore_permissions=True)
+	frappe.db.commit()
 
 @frappe.whitelist(allow_guest=True)
 def process_free_virtual_request(data):
@@ -1058,6 +1081,7 @@ def process_free_virtual_request(data):
 		"type": "Sponsor"
 		})
 	sponsor_request.insert(ignore_permissions=True)
+	frappe.db.commit()
 
 
 def validate_industry(industry=None):
@@ -1069,6 +1093,7 @@ def validate_industry(industry=None):
 			'industry': industry
 		})
 		doc.insert(ignore_permissions=True)
+		frappe.db.commit()
 
 	return industry
 
@@ -1118,6 +1143,7 @@ def process_free_request(data):
 		"payment_status": "Free"
 		})
 	free_request.insert(ignore_permissions=True)
+	frappe.db.commit()
 
 @frappe.whitelist(allow_guest=True)
 def process_discount_request(data):
@@ -1135,6 +1161,7 @@ def process_discount_request(data):
 		"newsletter": True
 		})
 	new_discount.insert(ignore_permissions=True)
+	frappe.db.commit()
 	return 
 
 
@@ -1191,6 +1218,7 @@ def log_email_to_lead(doc, method=None):
 			'docstatus': 1, 
 		})
 		comm.insert(ignore_permissions=True)
+		frappe.db.commit()
 
 
 def format(tag):
@@ -1229,5 +1257,6 @@ def tag_imported_leads(doc, method=None):
 				tag = tag.name
 
 			doc.add_tag(tag)
+		frappe.db.commit()
 
 	return
