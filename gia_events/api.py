@@ -396,38 +396,38 @@ def add_lead_to_request(request):
 	try:
 		if request.already_exists == 0:
 			if not request.lead:
-				new_lead = frappe.get_doc({
-					"doctype": "Lead",
-					"event": request.event_name,
-					"first_name": request.first_name,
-					"last_name": request.last_name,
-					"lead_name": request.full_name,
-					"job_title": request.job_title,
-					"company_name": request.company,
-					"email_id": request.email_address,
-					"country": request.country,
-					"phone": request.phone_number,
-					"industry": validate_industry(request.industry),
-					"type": request.type,
-					"request_type": request.interest_type,
-					"mobile_no": request.phone_number,
-					"lead_number": request.phone_number,
-					"address": request.address,
-					"city": request.city,
-					"source": request.source,
-					"unsubscribed": 1 if request.newsletter == 0 else 0,
-					"terms_and_conditions": request.terms_conditions,
-					"data_consent": request.data_consent
-				})
-				new_lead.insert(ignore_permissions=True)
-				
-				frappe.set_value("Request", request.name, 'lead', new_lead.name)
-				new_lead.add_tag(request.event_name)
+				leads = frappe.get_list("Lead", filters={'email_id': request.email_address})
+				if len(leads) > 0:
+					frappe.set_value("Request", request.name, 'lead', leads[0].name)
+				else:
+					new_lead = frappe.get_doc({
+						"doctype": "Lead",
+						"event": request.event_name,
+						"first_name": request.first_name,
+						"last_name": request.last_name,
+						"lead_name": request.full_name,
+						"job_title": request.job_title,
+						"company_name": request.company,
+						"email_id": request.email_address,
+						"country": request.country,
+						"phone": request.phone_number,
+						"industry": validate_industry(request.industry),
+						"type": request.type,
+						"request_type": request.interest_type,
+						"mobile_no": request.phone_number,
+						"lead_number": request.phone_number,
+						"address": request.address,
+						"city": request.city,
+						"source": request.source,
+						"unsubscribed": 1 if request.newsletter == 0 else 0,
+						"terms_and_conditions": request.terms_conditions,
+						"data_consent": request.data_consent
+					})
+					new_lead.insert(ignore_permissions=True)
+					
+					frappe.set_value("Request", request.name, 'lead', new_lead.name)
+					new_lead.add_tag(request.event_name)
 				frappe.db.commit()
-
-	except frappe.exceptions.DuplicateEntryError as e:
-		leads = frappe.get_list("Lead", filters={'email_id': request.email_address})
-		frappe.set_value("Request", request.name, 'lead', leads[0].name)
 
 	except Exception as e:
 		frappe.throw(e)
