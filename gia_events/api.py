@@ -37,7 +37,6 @@ def email_group(lead, method):
 			sub_to_group(email_group, lead.email_id, lead.event)
 
 	all_group_membership = frappe.get_list('Email Group Member', filters={'email_group': lead.event + " All", 'email': lead.email_id})
-
 	
 	ep(all_group_membership)
 
@@ -395,7 +394,7 @@ def add_lead_to_request(request):
 	# ep('add_lead_to_request')
 
 	try:
-		if request.already_exists == False:
+		if request.already_exists == 0:
 			if not request.lead:
 				new_lead = frappe.get_doc({
 					"doctype": "Lead",
@@ -425,6 +424,10 @@ def add_lead_to_request(request):
 				frappe.set_value("Request", request.name, 'lead', new_lead.name)
 				new_lead.add_tag(request.event_name)
 				frappe.db.commit()
+
+	except frappe.exceptions.DuplicateEntryError as e:
+		leads = frappe.get_list("Lead", filters={'email_id': request.email_address})
+		frappe.set_value("Request", request.name, 'lead', leads[0].name)
 
 	except Exception as e:
 		frappe.throw(e)
