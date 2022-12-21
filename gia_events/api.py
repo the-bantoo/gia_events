@@ -23,7 +23,8 @@ def ep(arg):
 
 
 def email_group(lead, method):
-
+	if lead.unsubscribed == 1:
+		return
 
 	if lead.request_type:
 		data = {"Speaking": "Speakers", "Attending": "Attendees", "Sponsoring": "Sponsors", "Exhibiting": "Media"}
