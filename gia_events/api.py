@@ -382,6 +382,16 @@ def attendee_exists(request, method):
 			email_member.insert(ignore_permissions=True)
 	frappe.db.commit()
 
+def update_email_group_subs(doc, method):
+	email_group = frappe.get_doc("Email Group", doc.email_group)
+	email_group.update_total_subscribers()
+	
+
+def reduce_email_group_subs(doc, method):
+	email_group = frappe.get_doc("Email Group", doc.email_group)
+	subs = int(email_group.get_total_subscribers()) - 1
+	frappe.set_value("Email Group", email_group.name, 'total_subscribers', subs)
+	frappe.db.commit()
 
 @frappe.whitelist(allow_guest=True)
 def add_lead_to_request(request):

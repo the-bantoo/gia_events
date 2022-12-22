@@ -127,7 +127,12 @@ doc_events = {
 	},
 	"Mailjet Webhook Log": {
 		"after_insert": "gia_events.api.log_email_to_lead"
+	},
+	"Email Group Member": {
+		"after_insert": "gia_events.api.update_email_group_subs",
+		"on_trash": "gia_events.api.reduce_email_group_subs"
 	}
+	
 }
 
 """   
