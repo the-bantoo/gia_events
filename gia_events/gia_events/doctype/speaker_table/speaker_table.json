@@ -32,8 +32,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Attendance Type",
-   "options": "\nIn-Person\nOnline",
-   "reqd": 1
+   "options": "\nIn-Person\nOnline"
   },
   {
    "fieldname": "payment_status",
@@ -60,13 +59,14 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2022-01-05 09:32:52.221434",
+ "modified": "2023-01-13 16:17:11.870217",
  "modified_by": "Administrator",
- "module": "Gia Events",
+ "module": "GIA Events",
  "name": "Speaker Table",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "track_changes": 1
 }

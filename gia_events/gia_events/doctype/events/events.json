@@ -26,6 +26,8 @@
   "media",
   "sec_7",
   "sponsors",
+  "event_exhibitors_section",
+  "exhibitors",
   "sec_8",
   "sponsor_group",
   "attendee_group",
@@ -185,6 +187,18 @@
    "fieldtype": "Date",
    "label": "Event Start Date",
    "reqd": 1
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "event_exhibitors_section",
+   "fieldtype": "Section Break",
+   "label": "Event Exhibitors"
+  },
+  {
+   "fieldname": "exhibitors",
+   "fieldtype": "Table",
+   "label": "Exhibitors",
+   "options": "Exhibitor Table"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -215,7 +229,7 @@
    "link_fieldname": "event_name"
   }
  ],
- "modified": "2022-12-09 13:22:48.697110",
+ "modified": "2023-01-13 19:28:20.854934",
  "modified_by": "Administrator",
  "module": "GIA Events",
  "name": "Events",

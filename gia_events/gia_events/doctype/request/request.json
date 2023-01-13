@@ -35,7 +35,7 @@
   "lead",
   "segmentation",
   "segmentation_no_1",
-  "segmentation_no_2",
+  "segmentation_2",
   "seg_col",
   "segmentation_details",
   "segmentation_status",
@@ -446,12 +446,6 @@
    "options": "\nEnd-user\nSolution Provider\nMedia\nOther"
   },
   {
-   "fieldname": "segmentation_no_2",
-   "fieldtype": "Select",
-   "label": "Segmentation No 2",
-   "options": "\nCustomer analytics\nData analytics\nAI/ML\nBlockchain\nCyber security\nTPRM\nData privacy compliance\nSmart Manufacturing\nIoT"
-  },
-  {
    "fieldname": "seg_col",
    "fieldtype": "Column Break"
   },
@@ -527,12 +521,18 @@
   {
    "fieldname": "section_break_79",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "segmentation_2",
+   "fieldtype": "Select",
+   "label": "Segmentation No 2",
+   "options": "\nCustomer analytics\nData analytics\nAI/ML\nBlockchain\nCyber security\nTPRM\nData privacy compliance\nSmart Manufacturing\nIoT"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-12-12 18:47:18.119291",
+ "modified": "2023-01-03 16:14:22.302086",
  "modified_by": "Administrator",
  "module": "GIA Events",
  "name": "Request",

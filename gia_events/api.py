@@ -1024,14 +1024,14 @@ def process_free_virtual_request(data):
 		request_status = False
 
 	if data['fields[acceptance][value]'] == "on":
-		privacy_concent = True
+		privacy_consent = True
 	else:
-		privacy_concent = False
+		privacy_consent = False
 
 	if data['fields[acceptance2][value]'] == "on":
-		data_concent = True
+		data_consent = True
 	else:
-		data_concent = False
+		data_consent = False
 
 	free_request = frappe.get_doc({
 		"doctype": "Request",
@@ -1052,8 +1052,8 @@ def process_free_virtual_request(data):
 		"interest_type": "Attending",
 		"type": "Attendee",
 		"industry": validate_industry(data['fields[industry][value]']),
-		"terms_conditions": privacy_concent,
-		"data_concent": data_concent,
+		"terms_conditions": privacy_consent,
+		"data_consent": data_consent,
 		"payment_status": "Free"
 		})
 	free_request.insert(ignore_permissions=True)
@@ -1125,14 +1125,14 @@ def process_free_request(data):
 		request_status = False
 
 	if data['fields[acceptance][value]'] == "on":
-		privacy_concent = True
+		privacy_consent = True
 	else:
-		privacy_concent = False
+		privacy_consent = False
 
 	if data['fields[acceptance2][value]'] == "on":
-		data_concent = True
+		data_consent = True
 	else:
-		data_concent = False
+		data_consent = False
 
 	free_request = frappe.get_doc({
 		"doctype": "Request",
@@ -1152,8 +1152,8 @@ def process_free_request(data):
 		"attendance_type": "In-Person",
 		"type": "Attendee",
 		"industry": validate_industry(data['fields[industry][value]']),
-		"terms_conditions": privacy_concent,
-		"data_consent": data_concent,
+		"terms_conditions": privacy_consent,
+		"data_consent": data_consent,
 		"payment_status": "Free"
 		})
 	free_request.insert(ignore_permissions=True)
@@ -1274,3 +1274,368 @@ def tag_imported_leads(doc, method=None):
 		frappe.db.commit()
 
 	return
+
+
+# create a function to create an attendee doctype from a lead and add the attendee to the event
+@frappe.whitelist(allow_guest=True)
+def create_event_participant_from_lead(lead, method=None):
+
+	if type(lead) is str:
+		lead = frappe.get_doc("Lead", lead)
+
+	if not lead.event:
+		frappe.throw("Please set an event for this lead")
+
+	event = frappe.get_doc('Events', lead.event)
+	event_name = event.name
+	event_url = frappe.utils.get_url_to_form("Event", event_name)
+
+	payment_status = ""
+	attendance_type = ""
+	paid_amount = 0
+	type_of_sponsorship = ""
+	speaker_info = ""
+
+	# get request if it exists with lead email and event name
+	if frappe.db.exists({'doctype': 'Attendee', 'email_address': lead.email_id, 'event_name': lead.email_id}):
+		request = frappe.get_list('Attendee', filters={'email_address': lead.email_id, 'event': lead.event_name}, fields={'*'}, pluck='name', limit=1)[0]
+		
+		payment_status = request.payment_status
+		attendance_type = request.attendance_type
+		paid_amount = request.paid_amount
+		type_of_sponsorship = request.type_of_sponsorship or ""
+		speaker_info = request.speaker_bio or ""
+
+	state = "Updated"
+
+	if lead.type == "Attendee":
+		attendee_name = ""
+		
+		if not frappe.db.exists({'doctype': 'Attendee', 'email_address': lead.email_id}):
+			#Create New Attendee
+			attendee = frappe.get_doc({
+				"doctype": "Attendee",
+				"first_name": lead.first_name,
+				"last_name": lead.last_name,
+				"full_name": lead.lead_name,
+				"email_address": lead.email_id,
+				"country": lead.country,
+				"phone_number": lead.lead_number,
+				"company": lead.company_name,
+				"job_title": lead.job_title,
+				"industry": lead.industry,
+				"city": lead.city,
+				"address": lead.address
+			})
+			attendee.insert(ignore_permissions=True, ignore_mandatory=True)
+
+			state = "Created"
+		else:
+			#Update Existing Attendee
+			attendee_name = frappe.get_list("Attendee", filters={'email_address': lead.email_id}, limit=1)[0].name
+			attendee = frappe.get_doc("Attendee", attendee_name)
+			attendee.first_name = lead.first_name
+			attendee.last_name = lead.last_name
+			attendee.full_name = lead.lead_name
+			attendee.email_address = lead.email_id
+			attendee.country = lead.country
+			attendee.phone_number = lead.lead_number
+			attendee.company = lead.company_name
+			attendee.job_title = lead.job_title
+			attendee.industry = lead.industry
+			attendee.city = lead.city
+			attendee.address = lead.address
+			attendee.flags.ignore_mandatory=True
+			attendee.save(ignore_permissions=True)
+
+		if attendee_name == "":
+			attendee_name = frappe.get_list("Attendee", filters={'email_address': lead.email_id}, limit=1)[0].name
+
+		attendee = frappe.get_doc("Attendee", attendee_name)
+
+		# add event to attendee tickets if not already there
+		tickets = []
+		for t in attendee.tickets:
+			tickets.append(t.event_name)
+
+		if lead.event not in tickets:
+			row = attendee.append("tickets", {
+				"event_name": lead.event,
+			})
+			row.insert(ignore_permissions=True)
+
+		# check if attendee has tag for event, add if not
+		tags = attendee.get_tags()
+		if(lead.event not in tags):
+			attendee.add_tag(lead.event)
+
+		# get event doctype and check if attendee is already in event.attendees
+		# Then add attendee to event.attendees if not already there
+		
+		attendees = []
+		for a in event.attendees:
+			attendees.append(a.attendee_id)
+
+		if lead.email_id not in attendees:
+			row = event.append("attendees", {
+				"attendee_id": lead.email_id,
+				"payment_status": payment_status,
+				"attendance_type": attendance_type,
+				"paid_amount": paid_amount
+				})
+			row.insert(ignore_permissions=True)
+
+		frappe.msgprint( _("{5} <strong><a href='{0}'>{2} document for {1}</a></strong> and added them to <strong><a href='{4}'>{3}</a></strong>".format(
+			frappe.utils.get_url_to_form("Attendee", attendee.name), 
+			attendee.full_name, 
+			attendee.doctype, 
+			lead.event, 
+			event_url,
+			state
+		)) )
+
+	# 2. If Lead is a Speaker, insert into Speaker doctype and add speaker to event.speakers table
+	elif lead.type == "Speaker":
+
+		speaker_name = ""
+			
+		if not frappe.db.exists({'doctype': 'Speaker', 'email_address': lead.email_id}):
+			#Create New Speaker
+			speaker = frappe.get_doc({
+				"doctype": "Speaker",
+				"first_name": lead.first_name,
+				"last_name": lead.last_name,
+				"full_name": lead.lead_name,
+				"email_address": lead.email_id,
+				"country": lead.country,
+				"phone_number": lead.lead_number,
+				"company": lead.company_name,
+				"job_title": lead.job_title,
+				"industry": lead.industry,
+				"city": lead.city,
+				"address": lead.address,
+				"speaker_bio": lead.speaker_info,
+				"payment_status": payment_status,
+				"attendance_type": attendance_type,
+				"event_name": lead.event
+			})
+			speaker.insert(ignore_permissions=True, ignore_mandatory=True)
+			state = "Created"
+			
+		else:
+			#Update Existing speaker
+			speaker_name = frappe.get_list("Speaker", filters={'email_address': lead.email_id}, limit=1)[0].name
+			speaker = frappe.get_doc("Speaker", speaker_name)
+			speaker.first_name = lead.first_name
+			speaker.last_name = lead.last_name
+			speaker.full_name = lead.lead_name
+			speaker.email_address = lead.email_id
+			speaker.country = lead.country
+			speaker.phone_number = lead.lead_number
+			speaker.company = lead.company_name
+			speaker.job_title = lead.job_title
+			speaker.industry = lead.industry
+			speaker.city = lead.city
+			speaker.address = lead.address
+			speaker.speaker_bio = lead.speaker_info
+			speaker.payment_status = payment_status
+			speaker.attendance_type = attendance_type
+			speaker.flags.ignore_mandatory=True
+			speaker.save(ignore_permissions=True)
+
+		if speaker_name == "":
+			speaker_name = frappe.get_list("Speaker", filters={'email_address': lead.email_id}, limit=1)[0].name
+
+		speaker = frappe.get_doc("Speaker", speaker_name)
+
+		# check if speaker has tag for event, add if not
+		tags = speaker.get_tags()
+		if(lead.event not in tags):
+			speaker.add_tag(lead.event)
+
+		# get event doctype and check if speaker is already in event.speakers
+		# Then add speaker to event.speakers if not already there		
+
+		speakers = []
+		for a in event.speakers:
+			speakers.append(a.speaker_id)
+
+		if lead.email_id not in speakers:
+			row = event.append("speakers", {
+				"full_name": lead.lead_name,
+				"speaker_id": lead.email_id,
+				"payment_status": payment_status,
+				"attendance_type": attendance_type,
+				"country": lead.country
+			})
+			row.flags.ignore_mandatory=True
+			row.insert(ignore_permissions=True)
+
+		frappe.msgprint( _("{5} <strong><a href='{0}'>{2} document for {1}</a></strong> and added them to <strong><a href='{4}'>{3}</a></strong>".format(
+			frappe.utils.get_url_to_form("Speaker", speaker.name), 
+			speaker.full_name, 
+			speaker.doctype, 
+			lead.event, 
+			event_url,
+			state
+		)) )
+
+	# 3. If Lead is a Media Partner, insert into Media Partner doctype and add media partner to event.media_partners table
+	elif lead.type == "Media Partner":
+
+		if not frappe.db.exists({'doctype': 'Media Partner', 'email_address': lead.email_id}):
+			media_partner = frappe.get_doc({
+				"doctype": "Media Partner",
+				"first_name": lead.first_name,
+				"last_name": lead.last_name,
+				"full_name": lead.lead_name,
+				"email_address": lead.email_id,
+				"country": lead.country,
+				"phone_number": lead.lead_number,
+				"company": lead.company_name,
+				"job_title": lead.job_title
+			})
+			media_partner.insert(ignore_permissions=True)
+			media_partner.add_tag(lead.event)
+
+
+	# 4. If Lead is a Sponsor, insert into Sponsor doctype and add sponsor to event.sponsors table
+	elif lead.type == "Sponsor":
+		sponsor = {}
+		if not frappe.db.exists({'doctype': 'Event Sponsor', 'sponsor_name': lead.company_name}):
+			sponsor = frappe.get_doc({
+				"doctype": "Event Sponsor", 
+				"sponsor_name": lead.company_name, 
+				"contact_person": lead.lead_name,
+				"email_address": lead.email_id, 
+				"country": lead.country, 
+				"phone_number": lead.lead_number,
+				"job_title": lead.job_title,
+				"city": lead.city,
+				"address": lead.address
+			})
+			sponsor.insert(ignore_permissions=True)
+			state = "Created"
+
+		else:
+			sponsor = frappe.get_doc("Event Sponsor", lead.company_name)
+			sponsor.contact_person = lead.lead_name
+			sponsor.email_address = lead.email_id
+			sponsor.country = lead.country
+			sponsor.phone_number = lead.lead_number
+			sponsor.company = lead.company_name
+			sponsor.job_title = lead.job_title
+			sponsor.city = lead.city
+			sponsor.address = lead.address
+			sponsor.flags.ignore_mandatory=True
+			sponsor.save(ignore_permissions=True)
+
+		if not sponsor:
+			sponsor = frappe.get_doc("Event Sponsor", lead.company_name)
+
+		# check if speaker has tag for event, add if not
+		tags = sponsor.get_tags()
+		if(lead.event not in tags):
+			sponsor.add_tag(lead.event)
+
+		# get event doctype and check if speaker is already in event.speakers
+		# Then add speaker to event.speakers if not already there		
+
+		sponsors = []
+		for s in event.sponsors:
+			sponsors.append(s.sponsor_id)
+
+		if lead.email_id not in sponsors:
+			row = event.append("sponsors", {
+				"sponsor_name": lead.company_name, 
+				"sponsor_id": lead.email_id, 
+				"sponsorship_type": type_of_sponsorship
+			})
+			row.flags.ignore_mandatory=True
+			row.insert(ignore_permissions=True)
+
+
+		frappe.msgprint( _("{5} <strong><a href='{0}'>{2} document for {1}</a></strong> and added them to <strong><a href='{4}'>{3}</a></strong>".format(
+			frappe.utils.get_url_to_form("Sponsor", sponsor.name), 
+			sponsor.sponsor_name, 
+			sponsor.doctype, 
+			lead.event, 
+			event_url,
+			state
+		)) )
+
+
+	elif lead.type == "Exhibitor":
+		exhibitor = {}
+		if not frappe.db.exists({'doctype': 'Exhibitor', 'email_address': lead.email_id}):
+			exhibitor = frappe.get_doc({
+				"doctype": "Exhibitor",
+				"salutation": lead.salutation,
+				"contact_person": lead.lead_name,
+				"company_name": lead.company_name,
+				"email_address": lead.email_id,
+				"country": lead.country,
+				"address": lead.address,
+				"city": lead.city,
+				"phone_number": lead.lead_number
+			})
+			exhibitor.insert(ignore_permissions=True)
+			state = "Created"
+
+		else:
+			exhibitor = frappe.get_doc("Exhibitor", lead.company_name)
+			exhibitor.contact_person = lead.lead_name
+			exhibitor.email_address = lead.email_id
+			exhibitor.country = lead.country
+			exhibitor.phone_number = lead.lead_number
+			exhibitor.company = lead.company_name
+			exhibitor.city = lead.city
+			exhibitor.address = lead.address
+			exhibitor.salutation = lead.salutation
+			
+			exhibitor.flags.ignore_mandatory=True
+			exhibitor.save(ignore_permissions=True)
+
+		if not exhibitor:
+			exhibitor = frappe.get_doc("Exhibitor", lead.company_name)
+
+		# check if exhibitor has tag for event, add if not
+		tags = exhibitor.get_tags()
+		if(lead.event not in tags):
+			exhibitor.add_tag(lead.event)
+
+		# get event doctype and check if exhibitor is already in event.exhibitors
+		# Then add speaker to event.exhibitors if not already there		
+
+		exhibitors = []
+		for s in event.exhibitors:
+			exhibitors.append(s.exhibitor_id)
+
+		if lead.email_id not in exhibitors:
+			row = event.append("exhibitors", {
+				"exhibitor_name": lead.company_name,
+				"exhibitor_id": lead.email_id
+			})
+			row.flags.ignore_mandatory=True
+			row.insert(ignore_permissions=True)
+
+		frappe.msgprint( _("{5} <strong><a href='{0}'>{2} document for {1}</a></strong> and added them to <strong><a href='{4}'>{3}</a></strong>".format(
+			frappe.utils.get_url_to_form("Exhibitor", exhibitor.name), 
+			exhibitor.name, 
+			exhibitor.doctype, 
+			lead.event, 
+			event_url,
+			state
+		)) )
+
+
+	frappe.db.commit()
+
+
+# get all leads for the passed event and call create_participant for each
+@frappe.whitelist(allow_guest=True)
+def create_participants_for_event_from_leads(event):
+	leads = frappe.get_all("Lead", filters={"event": event})
+	
+	for lead in leads:
+		create_event_participant_from_lead(lead.name)
