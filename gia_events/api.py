@@ -431,7 +431,7 @@ def add_lead_to_request(request):
 						"source": request.source,
 						"unsubscribed": 1 if request.newsletter == 0 else 0,
 						"terms_and_conditions": request.terms_conditions,
-						"data_consent": request.data_consent
+						"data_consent": 1
 					})
 					new_lead.insert(ignore_permissions=True)
 					
@@ -930,7 +930,7 @@ def process_speaker_form(data):
 	speaker_form = frappe.get_doc({
 		"doctype": "Speaker Form",
 		"event_name": data['fields[event_name][value]'],
-		"data_consent": True,
+		"data_consent": 1,
 		"full_name": data['fields[f_name][value]'] + " " + data['fields[l_name][value]'],
 		"job_title": data['fields[job_title][value]'],
 		"company": data['fields[company][value]'],
@@ -1052,8 +1052,8 @@ def process_free_virtual_request(data):
 		"interest_type": "Attending",
 		"type": "Attendee",
 		"industry": validate_industry(data['fields[industry][value]']),
-		"terms_conditions": privacy_consent,
-		"data_consent": data_consent,
+		"terms_conditions": 1,
+		"data_consent": 1,
 		"payment_status": "Free"
 		})
 	free_request.insert(ignore_permissions=True)
@@ -1152,8 +1152,8 @@ def process_free_request(data):
 		"attendance_type": "In-Person",
 		"type": "Attendee",
 		"industry": validate_industry(data['fields[industry][value]']),
-		"terms_conditions": privacy_consent,
-		"data_consent": data_consent,
+		"terms_conditions": 1,
+		"data_consent": 1,
 		"payment_status": "Free"
 		})
 	free_request.insert(ignore_permissions=True)
