@@ -21,6 +21,10 @@ def ep(arg):
 	if True:
 		frappe.errprint(arg)
 
+def update_lead(lead, method):
+	#update_tags(lead)
+	email_group(lead, method)
+
 
 def email_group(lead, method):
 	if lead.unsubscribed == 1:
@@ -577,13 +581,17 @@ def verify(request, method):
 					
 					attendee.add_tag(request.event_name)
 					
-					group_member = frappe.get_doc({
-						"doctype": "Email Group Member",
-						"email_group": event.attendee_group,
-						"email": request.email_address,
-						"event": request.event_name
-						})
-					group_member.insert(ignore_permissions=True)
+					try:
+						group_member = frappe.get_doc({
+							"doctype": "Email Group Member",
+							"email_group": event.attendee_group,
+							"email": request.email_address,
+							"event": request.event_name
+							})
+						group_member.insert(ignore_permissions=True)
+
+					except frappe.exceptions.UniqueValidationError as e:
+						pass
 			else:
 				#Create New Attendee
 				new_attendee = frappe.get_doc({
@@ -612,13 +620,17 @@ def verify(request, method):
 
 				#Add Attendee the Attendee Email Group
 				request_event = frappe.get_doc('Events', request.event_name)
-				group_member = frappe.get_doc({
-					"doctype": "Email Group Member",
-					"email_group": request_event.attendee_group,
-					"email": request.email_address,
-					"event": request.event_name
-					})
-				group_member.insert(ignore_permissions=True)
+				try:
+					group_member = frappe.get_doc({
+						"doctype": "Email Group Member",
+						"email_group": request_event.attendee_group,
+						"email": request.email_address,
+						"event": request.event_name
+						})
+					group_member.insert(ignore_permissions=True)
+
+				except frappe.exceptions.UniqueValidationError as e:
+					pass
 				
 		elif request.type == "Speaker":
 			if frappe.db.exists({'doctype': 'Speaker', 'email_address': request.email_address}):
@@ -664,13 +676,16 @@ def verify(request, method):
 				row.insert()
 
 				request_event = frappe.get_doc('Events', request.event_name)
-				group_member = frappe.get_doc({
-					"doctype": "Email Group Member",
-					"email_group": request_event.speaker_group,
-					"email": request.email_address,
-					"event": request.event_name
-				})
-				group_member.insert(ignore_permissions=True)
+				try:
+					group_member = frappe.get_doc({
+						"doctype": "Email Group Member",
+						"email_group": request_event.speaker_group,
+						"email": request.email_address,
+						"event": request.event_name
+					})
+					group_member.insert(ignore_permissions=True)
+				except frappe.exceptions.UniqueValidationError as e:
+					pass
 
 		elif request.type == "Sponsor":
 			if frappe.db.exists({'doctype': 'Sponsor', 'email_address': request.email_address}):
@@ -1274,6 +1289,19 @@ def tag_imported_leads(doc, method=None):
 		frappe.db.commit()
 
 	return
+
+@frappe.whitelist()
+def update_tags(lead):
+	if type(lead) is str:
+		lead = frappe.get_doc("Lead", lead)
+
+	tags = lead.get_tags()
+	tag_string = ", ".join(tags)
+
+	#frappe.db.set_value("Lead", lead.name, "import_tags", tag_string, update_modified=True)
+	#frappe.db.commit()
+	#lead.reload()
+	return tag_string
 
 
 # create a function to create an attendee doctype from a lead and add the attendee to the event
