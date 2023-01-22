@@ -22,7 +22,7 @@ def ep(arg):
 		frappe.errprint(arg)
 
 def update_lead(lead, method):
-	#update_tags(lead)
+	update_tags(lead)
 	email_group(lead, method)
 
 
@@ -1296,11 +1296,26 @@ def update_tags(lead):
 		lead = frappe.get_doc("Lead", lead)
 
 	tags = lead.get_tags()
-	tag_string = ", ".join(tags)
+	if tags:
+		tag_string = ", ".join(tags)
+	elif lead.event:
+		tag_string = lead.event
+	else:
+		return
 
-	#frappe.db.set_value("Lead", lead.name, "import_tags", tag_string, update_modified=True)
-	#frappe.db.commit()
-	#lead.reload()
+	"""# update from server if its not a client call
+	import inspect
+	caller_function = inspect.stack()[1][3]
+
+	if caller_function == "update_lead" and lead.import_tags == tag_string:
+		return
+	
+	elif caller_function == "update_lead":
+		frappe.db.set_value("Lead", lead.name, "import_tags", tag_string, update_modified=True)
+		frappe.db.commit()
+		lead.reload()
+	else:
+	"""
 	return tag_string
 
 
