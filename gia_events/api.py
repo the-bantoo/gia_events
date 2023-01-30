@@ -27,7 +27,7 @@ def update_lead(lead, method):
 
 
 def email_group(lead, method):
-	if lead.unsubscribed == 1:
+	if lead.unsubscribed == 1 or not lead.event:
 		return
 
 	if lead.request_type:
@@ -39,7 +39,7 @@ def email_group(lead, method):
 
 		if len(group_membership) < 1:
 			sub_to_group(email_group, lead.email_id, lead.event)
-
+	
 	all_group_membership = frappe.get_list('Email Group Member', filters={'email_group': lead.event + " All", 'email': lead.email_id})
 	
 	ep(all_group_membership)
@@ -57,6 +57,9 @@ def email_group(lead, method):
 """
 def subscription_update(lead, email, event):
 	membership = frappe.get_list('Email Group Member', fields={'name', 'unsubscribed'}, filters={'email_group': lead.event + " Subscription", 'email': lead.email_id})
+	if not lead.event:
+		return
+		
 	if len(membership) < 1:
 		
 		all_email_group_member =  frappe.get_doc({
