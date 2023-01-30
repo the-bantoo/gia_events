@@ -22,7 +22,7 @@ def ep(arg):
 		frappe.errprint(arg)
 
 def update_lead(lead, method):
-	update_tags(lead)
+	#update_tags(lead)
 	email_group(lead, method)
 
 
@@ -1300,11 +1300,22 @@ def update_tags(lead):
 
 	tags = lead.get_tags()
 	if tags:
-		tag_string = ", ".join(tags)
+		if len(tags) == 0 or tags[0] == '':
+			frappe.errprint(23)
+			tag_string = ""
+		else:
+			frappe.errprint(25)
+			frappe.errprint(tags)
+			tag_string = ", ".join(tags)
 	elif lead.event:
+		frappe.errprint(2)
 		tag_string = lead.event
 	else:
-		return
+		frappe.errprint(3)
+		tag_string = ""
+
+	#lead.import_tags = tag_string
+	frappe.db.set_value("Lead", lead.name, "import_tags", tag_string, update_modified=True)
 
 	"""# update from server if its not a client call
 	import inspect
@@ -1319,7 +1330,7 @@ def update_tags(lead):
 		lead.reload()
 	else:
 	"""
-	return tag_string
+	
 
 
 # create a function to create an attendee doctype from a lead and add the attendee to the event
