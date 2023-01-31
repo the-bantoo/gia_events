@@ -49,9 +49,6 @@ def email_group(lead, method):
 
 	subscription_update(lead, lead.email_id, lead.event)
 
-	
-
-
 """
 	adds email to particular email group and to "All" email group
 """
@@ -1315,7 +1312,9 @@ def update_tags(lead):
 		tag_string = ""
 
 	#lead.import_tags = tag_string
-	frappe.db.set_value("Lead", lead.name, "import_tags", tag_string, update_modified=True)
+	#frappe.db.set_value("Lead", lead.name, "import_tags", tag_string) #, update_modified=False)
+	return tag_string
+
 
 	"""# update from server if its not a client call
 	import inspect
