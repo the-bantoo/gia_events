@@ -1292,6 +1292,8 @@ def tag_imported_leads(doc, method=None):
 
 @frappe.whitelist()
 def update_tags(lead):
+	#for lead in frappe.get_all("Lead", fields=["name", "import_tags"], order_by="modified asc", limit=1):
+		#lead = frappe.get_doc("Lead", "CRM-LEAD-2022-00085")
 	if type(lead) is str:
 		lead = frappe.get_doc("Lead", lead)
 
@@ -1302,7 +1304,6 @@ def update_tags(lead):
 			tag_string = ""
 		else:
 			frappe.errprint(25)
-			frappe.errprint(tags)
 			tag_string = ", ".join(tags)
 	elif lead.event:
 		frappe.errprint(2)
@@ -1312,8 +1313,11 @@ def update_tags(lead):
 		tag_string = ""
 
 	#lead.import_tags = tag_string
+	#lead.save()
 	#frappe.db.set_value("Lead", lead.name, "import_tags", tag_string) #, update_modified=False)
 	return tag_string
+	#frappe.errprint(lead.name + " " + tag_string)
+	#frappe.db.commit()
 
 
 	"""# update from server if its not a client call
