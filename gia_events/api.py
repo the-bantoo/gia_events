@@ -698,8 +698,16 @@ def verify(request, method):
 				})
 				group_member.insert(ignore_permissions=True)
 			else:
+				name = request.full_name
+				if request.type_of_sponsor != "Individual":
+					if request.sponsor_name:
+						name = request.sponsor_name
+					elif request.sponsor_name:
+						name = request.company
+
 				new_sponsor = frappe.get_doc({
-					"doctype": "Event Sponsor", "first_name": request.first_name, "last_name": request.last_name, "full_name": request.full_name,
+					"doctype": "Event Sponsor", "sponsor_name": name, "contact_person": request.full_name, 
+					"postalzip_code": request.zip_code, "city": request.city, "sponsor_type": request.type_of_sponsor,
 					"email_address": request.email_address, "country": request.country, "phone_number": request.phone_number,
 					"company": request.company, "job_title": request.job_title
 				})
