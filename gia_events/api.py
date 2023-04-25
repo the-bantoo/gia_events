@@ -1341,7 +1341,53 @@ def update_tags(lead):
 		lead.reload()
 	else:
 	"""
-	
+
+def get_tags(lead_name):
+	# returns current tags on lead
+	return update_tags(lead_name)
+
+# create function that gets all leads and updates import_tags field if its not equal to the tags on the doctype
+@frappe.whitelist(allow_guest=True)
+def update_lead_tags():
+
+	skipped = 0
+	updated = 0
+	lead_name = "CRM-LEAD-2022-00085"
+	leads = [frappe.get_doc("Lead", lead_name)]
+
+	leads = frappe.get_all("Lead", fields=["name", "import_tags"], order_by="modified asc", limit=0)
+
+	for lead in leads:
+		lead_name = lead.name
+		tags = get_tags(lead_name)
+		frappe.errprint(lead.name)
+		frappe.errprint((tags or "") + " ???? " + (lead.import_tags or ""))
+
+		if tags == "" or tags == lead.import_tags:
+			frappe.errprint("skippedd")
+			skipped += 1
+			continue
+		else:
+			tag_len = len(tags or "")
+			import_tag_len = len(lead.import_tags or "")
+			frappe.errprint(tag_len)
+			frappe.errprint(import_tag_len)
+			
+			if tag_len >= 0:
+				# join tags
+				#tags = ", ".join([lead.import_tags, tags])
+				updated += 1
+				frappe.db.set_value("Lead", lead_name, "import_tags", tags, update_modified=False)
+				frappe.db.commit()
+				frappe.errprint(tags)
+				frappe.errprint("updated")
+			else:
+				frappe.errprint("skipped")
+				skipped += 1
+
+	frappe.errprint("Skipped: " + str(skipped) + " | Updated: " + str(updated) + " | Total: " + str(skipped + updated) + " | All " + str(len(leads)) )
+
+
 
 
 # create a function to create an attendee doctype from a lead and add the attendee to the event
