@@ -392,10 +392,7 @@ def update_email_group_subs(doc, method):
 	
 
 def reduce_email_group_subs(doc, method):
-	email_group = frappe.get_doc("Email Group", doc.email_group)
-	subs = int(email_group.get_total_subscribers()) - 1
-	frappe.set_value("Email Group", email_group.name, 'total_subscribers', subs)
-	frappe.db.commit()
+	update_email_group_subs(doc, method)
 
 @frappe.whitelist(allow_guest=True)
 def add_lead_to_request(request):
