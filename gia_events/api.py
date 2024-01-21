@@ -579,6 +579,9 @@ def verify(request, method):
 					attendee.add_tag(request.event_name)
 					
 					try:
+
+						if not event.attendee_group:
+							frappe.throw(_('Please set a default Email Group for <strong>{}</strong> in the Event <strong>{}</strong>'.format(request.type, request.event_name)))
 						group_member = frappe.get_doc({
 							"doctype": "Email Group Member",
 							"email_group": event.attendee_group,
@@ -618,6 +621,9 @@ def verify(request, method):
 				#Add Attendee the Attendee Email Group
 				request_event = frappe.get_doc('Events', request.event_name)
 				try:
+					
+					if not request_event.attendee_group:
+						frappe.throw(_('Please set a default Email Group for <strong>{}</strong> in the Event <strong>{}</strong>'.format(request.type, request.event_name)))
 					group_member = frappe.get_doc({
 						"doctype": "Email Group Member",
 						"email_group": request_event.attendee_group,
@@ -673,6 +679,8 @@ def verify(request, method):
 				row.insert()
 
 				request_event = frappe.get_doc('Events', request.event_name)
+				if not request_event.speaker_group:
+					frappe.throw(_('Please set a default Email Group for <strong>{}</strong> in the Event <strong>{}</strong>'.format(request.type, request.event_name)))
 				try:
 					group_member = frappe.get_doc({
 						"doctype": "Email Group Member",
@@ -689,6 +697,9 @@ def verify(request, method):
 				event = frappe.get_doc('Events', request.event_name)
 				row = event.append("sponsors", { "sponsor_name": request.full_name, "sponsor_id": request.email_address, "sponsorship_type": request.type_of_sponsorship })
 				row.insert()
+
+				if not event.sponsor_group:
+					frappe.throw(_('Please set a default Email Group for <strong>{}</strong> in the Event <strong>{}</strong>'.format(request.type, request.event_name)))
 
 				group_member = frappe.get_doc({
 					"doctype": "Email Group Member", "email_group": event.sponsor_group, "email": event.email_address, "event": event.event_name
