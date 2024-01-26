@@ -101,7 +101,7 @@ app_license = "MIT"
 doc_events = {
 	"Request": {
 		"after_insert": "gia_events.api.attendee_exists",
-		"validate": "gia_events.api.verify"
+		"on_update": "gia_events.api.verify"
 	},
 	"Speaker": {
 		"on_submit": "gia_events.api.add_speaker_to_event"
@@ -110,7 +110,7 @@ doc_events = {
 		"on_submit": "gia_events.api.make_speaker"
 	},
 	"Discount Request": {
-		"after_insert": "gia_events.api.email_member"
+		"on_submit": "gia_events.api.email_member"
 	},
 	"Events": {
 		"after_insert": "gia_events.api.create_project",
@@ -130,7 +130,7 @@ doc_events = {
 	},
 	"Email Group Member": {
 		"after_insert": "gia_events.api.update_email_group_subs",
-		"on_trash": "gia_events.api.reduce_email_group_subs"
+		"on_trash": "gia_events.api.delete_member"
 	}
 	
 }

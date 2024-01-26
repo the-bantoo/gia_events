@@ -300,6 +300,10 @@ def delete_spam():
 	frappe.db.delete("Request", {
 	"workflow_state": "Spam"
 	})
+
+	frappe.db.delete("Discount Request", {
+	"workflow_state": "Spam"
+	})
 	frappe.db.commit()
 	
 
@@ -350,22 +354,32 @@ def count_subscribers(email_group):
 	total_unsubscribed = frappe.db.count('Email Group Member', {'unsubscribed': True, 'email_group': email_group})
 	return total_subscribed, total_unsubscribed
 
+def get_lead(email):
+	sql = """select `name`
+	from `tabLead`
+	where `email_id` = '{}' or `second_email` = '{}'
+	
+	order by `creation` DESC
+	limit 1 offset 0
+	""".format(email, email)
+
+	return frappe.db.sql(sql, as_dict=1)
+
 def attendee_exists(request, method):
-	if frappe.db.exists({'doctype': 'Lead', 'email_id': request.email_address}):
+	lead_exists = get_lead(request.email_address)
+	if lead_exists:
 		#Link Lead to Request
-		data = frappe.db.sql("""SELECT name FROM `tabLead` WHERE email_id = %s""", (request.email_address)) #improve
 		frappe.db.set_value('Request', request.name, {
-				'lead': data[0][0],
+				'lead': lead_exists[0].name,
 				"already_exists": True
 			}, update_modified=True)
 
 
 	if request.request_type == "Paid Request":
-		if frappe.db.exists({'doctype': 'Lead', 'email_id': request.email_address}):
+		if lead_exists:
 			#Link Lead to Request
-			data = frappe.db.sql("""SELECT name FROM `tabLead` WHERE email_id = %s""", (request.email_address))
 			frappe.db.set_value('Request', request.name, {
-				'lead': data[0][0],
+				'lead': lead_exists[0].name,
 				"already_exists": True,
 				"workflow_state": "Paid Request"
 				})
@@ -391,18 +405,65 @@ def update_email_group_subs(doc, method):
 	email_group.update_total_subscribers()
 	
 
-def reduce_email_group_subs(doc, method):
+def delete_member(doc, method):
+	# recount email group members
 	update_email_group_subs(doc, method)
+
+	# remove eg from lead
+	remove_emailgroup_from_lead(doc)
+
+def remove_emailgroup_from_lead(doc):
+	# get lead, find and rm group's name
+	l = get_lead_by_email(doc.email)
+	if l:
+		lead = frappe.get_doc('Lead', l[0].name)
+
+		name = get_lead_email_group_name(lead, doc.email_group)
+		if name:
+			frappe.delete_doc('Contact Subscriptions', name)
+			frappe.db.commit()
+
+
+def get_lead_email_group_name(lead, email_group):
+    for eg in lead.email_group_subscriptions:
+        if str(eg.subscription) == str(email_group):
+            return eg.name
+    return False
+
+
+def get_lead_by_email(email):
+	sql = """select `name`
+	from `tabLead`
+	where `email_id` = '{}' or `second_email` = '{}'
+	
+	order by `creation` DESC
+	limit 1 offset 0
+	""".format(email, email)
+
+	return frappe.db.sql(sql, as_dict=1)
 
 @frappe.whitelist(allow_guest=True)
 def add_lead_to_request(request):
-	# create lead and attach it to the request
+	"""create lead and attach it to the request"""
+	# validate
+	if request.type == "Attendee":
+		if not request.payment_status:
+			frappe.throw('Payment Status is required to create a Lead')
+		if not request.attendance_type:
+			frappe.throw('Type of Attendance is required to create a Lead')
+
+	if request.payment_status != "":
+		if request.payment_status == "Paid" and request.paid_amount <= 0:
+			frappe.throw('Paid amount should be more than 0')
+		if request.payment_status == "Sponsored" and request.paid_amount <= 0:
+			frappe.throw('Paid amount should be more than 0')
 
 	# if origin is javascript
 	if type(request) is str: 
 		request = frappe.get_doc("Request", request)
 	
 	# ep('add_lead_to_request')
+	
 
 	try:
 		if request.already_exists == 0:
@@ -420,6 +481,7 @@ def add_lead_to_request(request):
 						"job_title": request.job_title,
 						"company_name": request.company,
 						"email_id": request.email_address,
+						"second_email": request.corporate_email or '',
 						"country": request.country,
 						"phone": request.phone_number,
 						"industry": validate_industry(request.industry),
@@ -784,10 +846,6 @@ def merge_req(old, new_doc):
 
 	if val != [cint(phone_number), email_address, company]:
 		frappe.throw(_("""Merging is only possible if following properties are same in both records. Phone Number, Email Address, Company"""))
-
-	#  if is_group and frappe.db.get_value("Request", new, "parent_account") == old:
-	#   frappe.db.set_value("Request", new, "parent_account",
-	#    frappe.db.get_value("Request", old, "parent_account"))
 
 	frappe.rename_doc("Request", old, new_doc, merge=1, force=1)
 	frappe.db.commit()
@@ -1316,16 +1374,12 @@ def update_tags(lead):
 	tags = lead.get_tags()
 	if tags:
 		if len(tags) == 0 or tags[0] == '':
-			frappe.errprint(23)
 			tag_string = ""
 		else:
-			frappe.errprint(25)
 			tag_string = ", ".join(tags)
 	elif lead.event:
-		frappe.errprint(2)
 		tag_string = lead.event
 	else:
-		frappe.errprint(3)
 		tag_string = ""
 
 	#lead.import_tags = tag_string
@@ -1360,26 +1414,19 @@ def update_lead_tags():
 
 	skipped = 0
 	updated = 0
-	lead_name = "CRM-LEAD-2022-00085"
-	leads = [frappe.get_doc("Lead", lead_name)]
 
 	leads = frappe.get_all("Lead", fields=["name", "import_tags"], order_by="modified asc", limit=0)
 
 	for lead in leads:
 		lead_name = lead.name
 		tags = get_tags(lead_name)
-		frappe.errprint(lead.name)
-		frappe.errprint((tags or "") + " ???? " + (lead.import_tags or ""))
 
 		if tags == "" or tags == lead.import_tags:
-			frappe.errprint("skippedd")
 			skipped += 1
 			continue
 		else:
 			tag_len = len(tags or "")
 			import_tag_len = len(lead.import_tags or "")
-			frappe.errprint(tag_len)
-			frappe.errprint(import_tag_len)
 			
 			if tag_len >= 0:
 				# join tags
@@ -1387,15 +1434,8 @@ def update_lead_tags():
 				updated += 1
 				frappe.db.set_value("Lead", lead_name, "import_tags", tags, update_modified=False)
 				frappe.db.commit()
-				frappe.errprint(tags)
-				frappe.errprint("updated")
 			else:
-				frappe.errprint("skipped")
 				skipped += 1
-
-	frappe.errprint("Skipped: " + str(skipped) + " | Updated: " + str(updated) + " | Total: " + str(skipped + updated) + " | All " + str(len(leads)) )
-
-
 
 
 # create a function to create an attendee doctype from a lead and add the attendee to the event
