@@ -1,5 +1,18 @@
 {
- "actions": [],
+ "actions": [
+  {
+   "action": "gia_events.api.run_update_lead_for_all_members",
+   "action_type": "Server Action",
+   "group": "Manage Leads",
+   "label": "Update Lead Subscriptions"
+  },
+  {
+   "action": "gia_events.api.create_missing_email_group_members",
+   "action_type": "Server Action",
+   "group": "Manage Leads",
+   "label": "Add Missing Lead Contacts"
+  }
+ ],
  "creation": "2021-09-21 10:14:52.115587",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -18,9 +31,9 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2021-09-21 10:14:52.115587",
+ "modified": "2024-02-15 20:31:01.327438",
  "modified_by": "Administrator",
- "module": "Gia Events",
+ "module": "GIA Events",
  "name": "Event Settings",
  "owner": "Administrator",
  "permissions": [
@@ -37,5 +50,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "track_changes": 1
 }

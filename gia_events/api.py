@@ -20,19 +20,171 @@ def p(*args):
 def ep(arg):
 	if True:
 		frappe.errprint(arg)
+def daily_run():
+	run_update_lead_for_all_members()
+	create_missing_email_group_members()
+
+def chunked_data(data, size):
+	"""Yield successive size chunks from data."""
+	for i in range(0, len(data), size):
+		yield data[i:i + size]
+		
+@frappe.whitelist()
+def run_update_lead_for_all_members():
+	
+	members = frappe.get_all(
+		"Email Group Member",
+		fields=["email", "email_group", "unsubscribed"],
+		# filters={"unsubscribed": 0}, 
+		limit=0
+	)
+	for data_chunk in chunked_data(members, 50):
+		for member in data_chunk:
+			update_lead_eg_sub(member, "run_update_lead_for_all_members")
+
+	frappe.msgprint("Updated {} Lead Subscriptions".format(str(len(members))))
+
+@frappe.whitelist()
+def create_missing_email_group_members(): # schedule
+	""" creates missing email group members by checking if the each Leads email_id and second_email have a related contact for the Lead's event """
+	email_groups = frappe.get_all("Email Group", fields=["name", "event"], limit=0)
+	created = 0
+	for group in email_groups:
+		members = frappe.get_all("Email Group Member", fields=["email", "email_group"], filters={'email_group': group.name}, limit=0)
+		leads = frappe.get_all("Lead", fields=["name", "email_id", "second_email", "event", "unsubscribed"], filters={'event': group.event}, limit=0)
+
+		for data_chunk in chunked_data(leads, 200):
+			for lead in data_chunk:
+				added = False
+				if {"email": lead.email_id, "email_group": group.name} not in members:
+					sub_to_group(group.name, lead.email_id, lead.event)
+					added = True
+
+				if lead.second_email and {"email": lead.second_email, "email_group": group.name} not in members:
+					sub_to_group(group.name, lead.second_email, lead.event)
+					added = True
+
+				if added:
+					created += 1
+					lead_doc = frappe.get_doc("Lead", lead.name)
+
+					add_mail_group_to_lead(lead_doc, group.name)
+					if lead_doc.unsubscribed == 1:
+						set_lead_unsubscribed(lead_doc, 0)
+
+					# add email to members
+		# 		break
+		# 	break
+		# if created > 1:
+		# 	break
+	if created > 0:
+		frappe.msgprint("Created {} Email Group Members".format(str(len(members))))
+		frappe.msgprint("Created new Email Group Members") # .format(str(len(members)))
+	else:
+		frappe.msgprint("No new Email Group Members were created")
+
+
+def update_lead_eg_sub(member, method):
+	""" updates the email groups a lead is subscribed to every time the egm changes """
+
+	# get lead by email_id or second_email fields
+	lead_name = get_lead(member.email)
+
+	if lead_name:
+		lead = frappe.get_doc("Lead", lead_name[0].name)
+		eg_count = len(lead.email_group_subscriptions)
+
+		added = None
+		removed = None
+
+		if member.unsubscribed == 0:
+			
+			added = add_mail_group_to_lead(lead, member.email_group)
+			# if lead.unsubscribed == 0: pass		
+			
+			if added:
+				if lead.unsubscribed == 1:
+					# set lead.unsubscribed to 0
+					set_lead_unsubscribed(lead, 0)
+		else:
+			removed = remove_mail_group_from_lead(lead, member.email_group)
+			
+			if removed:
+				if eg_count <= 1:
+					# set lead.unsubscribed to 1
+					if lead.unsubscribed == 0:
+						set_lead_unsubscribed(lead, 1)
+				else:
+					# set lead.unsubscribed to 0
+					if lead.unsubscribed == 1:
+						set_lead_unsubscribed(lead, 0)
+			
+		if (not added and not removed):
+			if eg_count == 0:
+				# set lead.unsubscribed to 1
+				if lead.unsubscribed == 0:
+					set_lead_unsubscribed(lead, 1)
+			else:
+				# set lead.unsubscribed to 0
+				if lead.unsubscribed == 1:
+					set_lead_unsubscribed(lead, 0)
+
+
+def remove_mail_group_from_lead(lead, email_group):
+	""" Removes the email group from the lead if it exists. """
+	# Iterate through the subscriptions to find and remove the specified email group
+	for row in lead.email_group_subscriptions:
+		if row.subscription == email_group:
+			lead.email_group_subscriptions.remove(row)
+			# Optionally, you can delete the row from the database
+			row.delete(ignore_permissions=True)
+			return True
+	# If the email group does not exist in the lead's subscriptions, return False
+	return False
+			
+def add_mail_group_to_lead(lead, email_group):
+	""" adds the email group to the lead if not already there"""
+	for row in lead.email_group_subscriptions:
+		if row.subscription == email_group:
+			return False
+
+	row = lead.append('email_group_subscriptions', {
+		'subscription': email_group
+	})
+	row.insert(ignore_permissions=True)
+	return True
+
+	
+def set_lead_unsubscribed(lead, val):
+	lead.unsubscribed = val
+	lead.save(ignore_permissions=True)
+
+	
+def get_lead(email):
+	sql = """select `name`
+	from `tabLead`
+	where `email_id` = '{}' or `second_email` = '{}'
+	
+	order by `creation` DESC
+	limit 1 offset 0
+	""".format(email, email)
+
+	return frappe.db.sql(sql, as_dict=1)
 
 def update_lead(lead, method):
 	#update_tags(lead)
-	email_group(lead, method)
+	add_default_mail_groups(lead, method)
 
 
-def email_group(lead, method):
+def add_default_mail_groups(lead, method):
+
+	# list all email group members this lead has and add subscriptions to table
 	if lead.unsubscribed == 1 or not lead.event:
 		return
 
 	if lead.request_type:
-		data = {"Speaking": "Speakers", "Attending": "Attendees", "Sponsoring": "Sponsors", "Exhibiting": "Media"}
-		email_group = str(lead.event) + " " + data[lead.request_type]
+		attendance_type = {"Speaking": "Speakers", "Attending": "Attendees", "Sponsoring": "Sponsors", "Exhibiting": "Media"}
+		email_group = str(lead.event) + " " + attendance_type[lead.request_type]
 		group_membership = frappe.get_list('Email Group Member', filters={'email_group': email_group, 'email': lead.email_id})
 
 		# ep(email_group)
@@ -42,61 +194,63 @@ def email_group(lead, method):
 	
 	all_group_membership = frappe.get_list('Email Group Member', filters={'email_group': lead.event + " All", 'email': lead.email_id})
 	
+	
 	# ep(all_group_membership)
 
 	if len(all_group_membership) < 1:
 		add_email_sub_all(lead.email_id, lead.event)
 
-	subscription_update(lead, lead.email_id, lead.event)
+	add_to_subs_group(lead, lead.email_id, lead.event)
+	if lead.second_email:
+		add_to_subs_group(lead, lead.second_email, lead.event)
+
+		if len(group_membership) < 1:
+			sub_to_group(email_group, lead.second_email, lead.event)
+
+		all_group_membership2 = frappe.get_list('Email Group Member', filters={'email_group': lead.event + " All", 'email': lead.second_email})
+
+		if len(all_group_membership2) < 1:
+			add_email_sub_all(lead.second_email, lead.event)
 
 """
 	adds email to particular email group and to "All" email group
 """
-def subscription_update(lead, email, event):
-	membership = frappe.get_list('Email Group Member', fields={'name', 'unsubscribed'}, filters={'email_group': lead.event + " Subscription", 'email': lead.email_id})
+def add_to_subs_group(lead, email, event):
+	membership = frappe.get_list('Email Group Member', fields={'name', 'unsubscribed'}, filters={
+		'email_group': str(lead.event) + " All", 'email': lead.email_id
+	})
 	if not lead.event:
 		return
 		
-	if len(membership) < 1:
-		
-		all_email_group_member =  frappe.get_doc({
-			"doctype": "Email Group Member",
-			"email_group": str(event) + " Subscription",
-			"event": event,
-			"email": email
-		})
-		all_email_group_member.insert(ignore_permissions=True)
+	if not membership:		
+		sub_to_group(str(lead.event) + " Subscription", lead.email_id, str(lead.event))
+		frappe.db.commit()
 
-	else:
-		if (membership[0].unsubscribed == 1 and lead.unsubscribed == 0) or (membership[0].unsubscribed == 0 and lead.unsubscribed == 1):
-			m =  frappe.get_doc("Email Group Member", membership[0].name)
-			m.unsubscribed = lead.unsubscribed
-			m.save(ignore_permissions=True)
+	# else:
+	# 	# hold result of conditional check in variable
+
+	# 	lead_subbed_eg_unsubbed = (membership[0].unsubscribed == 1 and lead.unsubscribed == 0)
+	# 	if lead_subbed_eg_unsubbed or (membership[0].unsubscribed == 0 and lead.unsubscribed == 1):
+	# 		m =  frappe.get_doc("Email Group Member", membership[0].name)
+	# 		m.unsubscribed = lead.unsubscribed
+	# 		m.save(ignore_permissions=True)
 	
-	frappe.db.commit()
+	
 
 
 def sub_to_group(email_group, email, event):
-
-	email_group_member =  frappe.get_doc({
-		"doctype": "Email Group Member",
-		"email_group": email_group,
-		"event": event,
-		"email": email
-	})
-	email_group_member.insert(ignore_permissions=True)
+	exists = frappe.get_all("Email Group Member", filters={'email_group': email_group, 'email': email}, limit=1)
+	if not exists:
+		email_group_member =  frappe.get_doc({
+			"doctype": "Email Group Member",
+			"email_group": email_group,
+			"event": event,
+			"email": email
+		})
+		email_group_member.insert(ignore_permissions=True)
 
 def add_email_sub_all(email, event):
-
-	all_email_group_member =  frappe.get_doc({
-		"doctype": "Email Group Member",
-		"email_group": str(event) + " All",
-		"event": event,
-		"email": email
-	})
-	all_email_group_member.insert(ignore_permissions=True)
-
-	
+	sub_to_group(event + " All", email, event)	
 
 
 @frappe.whitelist(allow_guest=True)
@@ -425,10 +579,10 @@ def remove_emailgroup_from_lead(doc):
 
 
 def get_lead_email_group_name(lead, email_group):
-    for eg in lead.email_group_subscriptions:
-        if str(eg.subscription) == str(email_group):
-            return eg.name
-    return False
+	for eg in lead.email_group_subscriptions:
+		if str(eg.subscription) == str(email_group):
+			return eg.name
+	return False
 
 
 def get_lead_by_email(email):

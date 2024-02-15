@@ -130,7 +130,8 @@ doc_events = {
 	},
 	"Email Group Member": {
 		"after_insert": "gia_events.api.update_email_group_subs",
-		"on_trash": "gia_events.api.delete_member"
+		"on_trash": "gia_events.api.delete_member",
+		"on_update": "gia_events.api.update_lead_eg_sub",
 	}
 	
 }
@@ -145,6 +146,15 @@ doc_events = {
 """
 # Scheduled Tasks
 # ---------------
+
+
+scheduler_events = {
+	"daily": [
+		"gia_events.api.daily_run",
+		"frappe_mailjet.app.daily_run"
+
+	]
+}
 
 # scheduler_events = {
 # 	"all": [
