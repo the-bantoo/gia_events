@@ -149,14 +149,19 @@ doc_events = {
 
 
 scheduler_events = {
-	"daily": [
-		"gia_events.api.daily_run",
-		"frappe_mailjet.app.daily_run"
-
-	]
+	"cron": {
+		"0 02 * * *": [
+			"gia_events.api.daily_run",
+			"frappe_mailjet.app.daily_run"
+		]
+	}
 }
 
 # scheduler_events = {
+# 	"*/10 * * * *": [ # every 10 minutes
+# 		"gia_events.api.daily_run",
+# 		"frappe_mailjet.app.daily_run"
+# 	]
 # 	"all": [
 # 		"gia_events.tasks.all"
 # 	],

@@ -20,7 +20,9 @@ def p(*args):
 def ep(arg):
 	if True:
 		frappe.errprint(arg)
+
 def daily_run():
+	print('Daily run start ###############################################################################################')
 	run_update_lead_for_all_members()
 	create_missing_email_group_members()
 
