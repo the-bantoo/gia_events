@@ -35,14 +35,14 @@ def email_group(lead, method):
 		email_group = str(lead.event) + " " + data[lead.request_type]
 		group_membership = frappe.get_list('Email Group Member', filters={'email_group': email_group, 'email': lead.email_id})
 
-		ep(email_group)
+		# ep(email_group)
 
 		if len(group_membership) < 1:
 			sub_to_group(email_group, lead.email_id, lead.event)
 	
 	all_group_membership = frappe.get_list('Email Group Member', filters={'email_group': lead.event + " All", 'email': lead.email_id})
 	
-	ep(all_group_membership)
+	# ep(all_group_membership)
 
 	if len(all_group_membership) < 1:
 		add_email_sub_all(lead.email_id, lead.event)
@@ -442,7 +442,7 @@ def get_lead_by_email(email):
 
 	return frappe.db.sql(sql, as_dict=1)
 
-@frappe.whitelist(allow_guest=True)
+# @frappe.whitelist(allow_guest=True)
 def add_lead_to_request(request):
 	"""create lead and attach it to the request"""
 	# validate
@@ -571,7 +571,7 @@ def verify(request, method):
 		
 	if request.workflow_state == 'Merged':
 		#Update the lead:
-		ep("Update the lead")
+		# ep("Update the lead")
 		
 		doc = frappe.get_doc('Lead', request.lead)
 
@@ -1150,7 +1150,7 @@ def process_free_virtual_request(data):
 
 @frappe.whitelist(allow_guest=True)
 def process_free_virtual_request(data):
-	ep(data)
+	# ep(data)
 
 	if not data['fields[email][value]']:
 		return "improper data"
@@ -1203,7 +1203,7 @@ def validate_industry(industry=None):
 
 @frappe.whitelist(allow_guest=True)
 def process_free_request(data):
-	ep(data)
+	# ep(data)
 
 	if not data['fields[email][value]']:
 		return "improper data"
