@@ -110,7 +110,7 @@ doc_events = {
 		"on_submit": "gia_events.api.make_speaker"
 	},
 	"Discount Request": {
-		"on_submit": "gia_events.api.email_member"
+		"on_submit": "gia_events.api.discount_request_hook"
 	},
 	"Events": {
 		"after_insert": "gia_events.api.create_project",
@@ -122,7 +122,7 @@ doc_events = {
 		"on_update": "gia_events.api.update_lead",
 		"after_insert": [
 				"gia_events.api.link_lead",
-				"gia_events.api.tag_imported_leads"
+				"gia_events.api.update_tags_from_frm"
 			]
 	},
 	"Mailjet Webhook Log": {
