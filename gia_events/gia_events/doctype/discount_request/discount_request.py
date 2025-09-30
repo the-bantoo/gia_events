@@ -5,8 +5,35 @@ import frappe
 from frappe.utils import getdate
 from gia_events.api import validate_industry
 from frappe.model.document import Document
+from gia_events.api import find_request_by_email
 
 class DiscountRequest(Document):
+	@frappe.whitelist()
+	def set_lead_n_request(self):
+		save = False
+
+		if self.lead and self.request:
+			return False
+			
+		leads = self.get_lead()
+		requests = find_request_by_email(self.corporate_email)
+
+		if leads:
+			self.lead = leads[0].name
+			save = True
+
+		if requests:
+			self.request = requests[0].name
+			save = True
+		
+		if save:
+			self.save()
+			
+		if leads or requests:
+			return True
+		else:
+			return False
+
 	def insert_lead(self):
 		fullname = self.full_name.split()
 		l_name = ''
@@ -21,7 +48,13 @@ class DiscountRequest(Document):
 			'event': self.event_name,
 			'company_name': self.company_name,
 			'first_name': fullname[0],
-			'last_name': l_name
+			'last_name': l_name,
+			"type": "Attendee",
+			"request_type": "Attending",
+			"unsubscribed": 1 if self.newsletter == 0 else 0,
+			"terms_and_conditions": 1,
+			"data_consent": 1,
+			"first_request": self.creation,
 		}
 				
 		req = self.get_request()
@@ -54,9 +87,9 @@ class DiscountRequest(Document):
 				"address": request.address,
 				"city": request.city,
 				"source": request.source,
-				"unsubscribed": 1 if request.newsletter == 0 else 0,
 				"terms_and_conditions": request.terms_conditions,
-				"data_consent": 1
+				"data_consent": 1,
+				"first_request": request.creation,
 			})
 			frappe.msgprint('A new Lead has been created along with data from a related Attendance Request')
 
@@ -97,14 +130,16 @@ class DiscountRequest(Document):
 		lead_exists = []
 		if self.workflow_state == "Confirmed":
 
-			lead = {}
-			lead_exists = self.get_lead()
-
-			if lead_exists:
-				lead = frappe.get_doc('Lead', lead_exists[0].name)
+			if self.lead:
+				lead = frappe.get_doc('Lead', self.lead)
 			else:
-				# if lead doesnt exist
-				lead = self.insert_lead()			
+				lead_exists = self.get_lead()
+
+				if lead_exists:
+					lead = frappe.get_doc('Lead', lead_exists[0].name)
+				else:
+					# create, if lead doesnt exist
+					lead = self.insert_lead()			
 
 			event = frappe.get_cached_doc('Events', self.event_name)
 			event_email_group = event.sub_group
@@ -117,6 +152,7 @@ class DiscountRequest(Document):
 
 			# create and add event tags 
 			import_tags = self.add_tags_to_lead(lead)
+			frappe.db.set_value("Lead", lead.name, "import_tags", import_tags, update_modified=False)
 			
 			if not self.lead_has_email_group(lead, event_email_group):
 				""" add the email group to the lead's email groups """			
@@ -129,13 +165,8 @@ class DiscountRequest(Document):
 					"subscription": event_email_group
 				})
 				eg_sub.insert(ignore_permissions=True)
-				
-				lead.import_tags = import_tags
-				lead.save(ignore_permissions=True)
 
-			#lead = frappe.get_doc('Lead', lead.name)
-		# else:
-		#     frappe.errprint('not spam')
+			
 
 
 	def lead_has_email_group(self, lead, email_group):

@@ -161,7 +161,7 @@ def set_lead_unsubscribed(lead, val):
 	lead.unsubscribed = val
 	lead.save(ignore_permissions=True)
 
-	
+@frappe.whitelist(allow_guest=True)
 def get_lead(email):
 	sql = """select `name`
 	from `tabLead`
@@ -492,11 +492,69 @@ def link_lead(lead, method):
 		frappe.db.commit()
 
 
-def discount_request_hook(dr, method):
-	email_member(dr, method)
+def discount_request_hook(d, method):
+	email_member(d, method)
+	# add_discount_to_lead(d)
+
+
+
+def find_request_by_email(email):
+	sql = """
+		SELECT `name`, `creation`, `type`
+		FROM `tabRequest`
+		where `email_address` = '{}' or `corporate_email` = '{}'
+		ORDER BY `creation` DESC
+	""".format(email, email)
+	
+	return frappe.db.sql(sql, as_dict=1)
+
+
+# def add_discount_to_lead(discount):
+# 	ep('hello')
+# 	# find lead by email_id or second_email
+	
+# 	leads = get_lead(discount.corporate_email)
+# 	ep(f"leads {leads}")
+# 	if not leads:
+# 		# else of "if Lead is found" block, which is "if not leads" (Lead is NOT found)
+# 		# Find request
+# 		request = find_request_by_email(discount.corporate_email)
+# 		ep(f"request {request}")
+		
+# 		if not request:
+# 			# else of "Find request" block
+# 			# create lead as attendee
+# 			new_lead = create_lead_as_attendee(discount)
+# 			ep(f"Created new lead: {new_lead}")
+# 			return new_lead
+# 		else:
+# 			# If request is found, typically you'd do something with it, 
+# 			# but the logic provided only specifies what to do if a request is NOT found.
+# 			# Assuming for now we just return the request or handle it later.
+# 			ep(f"Found request: {request}")
+# 			return request
+	# else:
+	# 	# if Lead is found (i.e., leads is not empty)
+	# 	lead = leads[0] # Assuming get_lead returns a list and we work with the first one
+		
+	# 	# add discount tag
+	# 	add_tag_to_lead(lead, 'discount_applied') # Assuming a function for this exists
+		
+	# 	# enable email newsletter
+	# 	enable_newsletter_for_lead(lead) # Assuming a function for this exists
+		
+	# 	ep(f"Updated lead {lead.id} with discount tag and enabled newsletter.")
+	# 	return lead
+
 	
 def email_member(discount_request, method):
 	event = frappe.get_doc("Events", discount_request.event_name)
+	
+	if not event.sub_group:
+		url = event.get_url()
+		frappe.msgprint(f"<a href='{url}'>{event.name}</a> has no subscriber group set. Click <a href='{url}'>here</a> to set one.")
+		return
+
 	if discount_request.newsletter == True:
 		if not frappe.db.exists({'doctype': 'Email Group Member', 'email_group': event.sub_group, 'email': discount_request.corporate_email}):
 			email_member = frappe.get_doc({
@@ -505,7 +563,7 @@ def email_member(discount_request, method):
 				"email_group": event.sub_group
 				})
 			email_member.insert(ignore_permissions=True)
-	frappe.db.commit()
+			frappe.db.commit()
 
 @frappe.whitelist()
 def count_subscribers(email_group):
@@ -1526,22 +1584,58 @@ def make_default_tags(lead):
 	3. The year of creation for all associated Requests.
 	"""
 	default_tags = set()
+	requests = get_request(lead.email_id, lead.second_email)
+	
+	if (requests and (not lead.event or not lead.type or not lead.request_type or not lead.first_request or not lead.phone or not lead.first_name or not lead.last_name or not lead.company_name)):
+		r = requests[0]
+		lead.event = r.event_name
+
+		frappe.db.set_value("Lead", lead.name, {
+				"event": r.event_name,
+				"type": r.type,
+				"request_type": r.interest_type,
+				"first_request": r.creation,
+				"phone": r.phone_number,
+				"first_name": r.first_name,
+				"last_name": r.last_name,
+				"company_name": r.company,
+				"job_title": r.job_title,
+				"lead_name": r.full_name,
+				"country": r.country,
+				"industry": validate_industry(r.industry),
+				"lead_number": r.phone_number,
+				"address": r.address,
+				"city": r.city,
+				"source": r.source,
+				"unsubscribed": 1 if r.newsletter == 0 else 0,
+				"terms_and_conditions": r.terms_conditions,
+				"data_consent": 1,
+			}, update_modified=False)
+
+	event = lead.event 
+	
+	if not event and requests:
+		event = requests[0].event_name
 	
 	# 1. Add lead.event as a tag
-	if lead.event:
-		default_tags.add(lead.event)
+	if event:
+		default_tags.add(event)
 		
-		# 2. Add capitalized acronym from company name
+		# 2. Add capitalized acronym from company name excluding the year
 		# Example: "We Do This" becomes "WDT"
 
-		acronym = "".join([word[0] for word in lead.event.split()]).upper()
+		acronym = "".join([
+			word[0] 
+			for word in event.split() 
+			if not (len(word) == 4 and word.isdigit() and word.startswith('20'))
+		]).upper()
+
 		if acronym:
 			default_tags.add(acronym)
+
 			
 	# 3. Add creation year for all associated Requests
 	# Assuming there is a link field in 'Request' called 'lead'
-
-	requests = get_request(lead.email_id, lead.second_email)
 
 	for req in requests:
 	    creation_year = frappe.utils.getdate(req.creation).year
@@ -1549,6 +1643,7 @@ def make_default_tags(lead):
 	        default_tags.add(f"{req.type} {str(creation_year)}")
 			
 	return list(default_tags)
+
 
 def get_request(email, second_email=None):
     # Start with the primary email
@@ -1562,7 +1657,8 @@ def get_request(email, second_email=None):
     # frappe.db.sql will handle converting the Python list/tuple into the appropriate 
     # SQL IN clause format (e.g., ('email1@example.com', 'email2@example.com')).
     sql = """
-        SELECT `name`, `creation`, `type`
+        SELECT `name`, `creation`, `event_name`, `type`, `event_name`, `type`, `interest_type`, `phone_number`, `first_name`, `last_name`, `company`, `job_title`,
+				`country`, `industry`, `address`, `city`, `source`, `terms_conditions`, `full_name`
         FROM `tabRequest`
         WHERE `email_address` IN %s
         ORDER BY `creation` DESC
@@ -1581,9 +1677,14 @@ def update_tags_hook():
 	if import_tags and not (current_tags or current_tags[0]==''):
 		tag_lead(lead)
 		frappe.db.commit()
+	# else:
+	# 	update_tags_from_frm(lead)
 
 
-
+def tag_is_only_event_name(lead):
+	if lead.event and lead.import_tags:
+		return lead.event == lead.import_tags
+	return False
 
 @frappe.whitelist()
 def update_tags_from_frm(lead, method=None):
@@ -1595,21 +1696,35 @@ def update_tags_from_frm(lead, method=None):
 
 	current_tags = get_current_tags(lead.name)
 	import_tags = lead.import_tags
-	is_tagged = current_tags and (current_tags[0]!='')
+	is_tagged = len(current_tags)>1 and (current_tags[0]!='')
+	""" current_tags[0]=='') checks for empty tags bc tags always have a default tag with an empty str value '' """
+
+	tags_are_updated = tags_field_is_updated(import_tags, current_tags)
+	tag_is_just_event_name = tag_is_only_event_name(lead)
+
+
+	# ep('-------')
+	# ep(f'{lead.name} - {lead.lead_name}')
+	# ep(f'is_tagged {is_tagged}')
+	# ep(f'tags_are_updated {tags_are_updated}')
+	# ep(f'event {lead.event}')
+	# ep(f'import_tags {import_tags}')
+	# ep(f'tag_is_only_event_name {tag_is_just_event_name}')
 
 	# if tags are fine, discontinue
-	if is_tagged and tags_field_is_updated(import_tags, current_tags):
+	if (is_tagged and tags_are_updated) and not tag_is_just_event_name:
+		# ep(1)
 		return
 
 	# Condition 2: If the lead has tags but import_tags is different, update import_tags to match tags.
-	elif is_tagged and not tags_field_is_updated(import_tags, current_tags):
+	elif (is_tagged and not tags_are_updated) and not tag_is_just_event_name:
+		# ep(2)
 		update_lead_import_tags_field(lead)
 		frappe.db.commit()
-
-	# Condition 2: If the lead is tagless (has no tags), add default tags.
-	elif not is_tagged and not import_tags: 
-		""" current_tags[0]=='') checks for empty tags bc tags always have a default tag with an empty str value '' """
-		
+	
+	# Condition 3: If the lead is tagless (has no tags), add default tags.
+	elif (not is_tagged and not import_tags) or tag_is_just_event_name: 
+		# ep(3)
 		default_tags = make_default_tags(lead)
 		for tag in default_tags:
 			lead.add_tag(tag)
@@ -1620,8 +1735,11 @@ def update_tags_from_frm(lead, method=None):
 	
 	# set tags from import_tags
 	elif import_tags and not is_tagged:
+		ep(4)
 		update_lead_tags_from_field(lead)
 		frappe.db.commit()
+	else:
+		ep('else')
 
 
 
@@ -1652,6 +1770,27 @@ def update_lead_import_tags_field(lead):
 
 	tag_string = get_tags_as_str(lead)
 	frappe.db.set_value("Lead", lead.name, "import_tags", tag_string) #, update_modified=False)
+
+
+# gets all leads then updates lead.import_tags field if its not equal to the tags on the doctype
+@frappe.whitelist(allow_guest=True)
+def set_empty_lead_tags():
+
+	skipped = 0
+	updated = 0
+
+	leads = frappe.get_all("Lead", filters={'import_tags': ['is', 'not set']}, fields=["name"], order_by="modified asc", limit=0)
+	total = len(leads)
+	
+	count = 0
+	for lead in leads:
+		update_tags_from_frm(lead.name)
+		count += 1
+		if count >= 5: break
+
+	bal = total - count
+	return [total, count, bal]
+
 
 
 # gets all leads then updates lead.import_tags field if its not equal to the tags on the doctype

@@ -13,7 +13,11 @@
   "col_1",
   "corporate_email",
   "event_name",
-  "amended_from"
+  "amended_from",
+  "section_break_xhu6o",
+  "lead",
+  "column_break_ayjvq",
+  "request"
  ],
  "fields": [
   {
@@ -69,16 +73,40 @@
    "options": "Discount Request",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "section_break_xhu6o",
+   "fieldtype": "Section Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "lead",
+   "fieldtype": "Link",
+   "label": "Lead",
+   "options": "Lead",
+   "read_only_depends_on": "lead"
+  },
+  {
+   "fieldname": "column_break_ayjvq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "request",
+   "fieldtype": "Link",
+   "label": "Request",
+   "options": "Request",
+   "read_only_depends_on": "request"
   }
  ],
- "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [
   {
    "link_doctype": "Request",
    "link_fieldname": "corporate_email"
   }
  ],
- "modified": "2023-03-10 16:49:38.975466",
+ "modified": "2025-09-26 16:20:01.442622",
  "modified_by": "Administrator",
  "module": "GIA Events",
  "name": "Discount Request",

@@ -110,7 +110,8 @@ doc_events = {
 		"on_submit": "gia_events.api.make_speaker"
 	},
 	"Discount Request": {
-		"on_submit": "gia_events.api.discount_request_hook"
+		"on_update": "gia_events.api.discount_request_hook"
+		#"on_submit": "gia_events.api.discount_request_hook"
 	},
 	"Events": {
 		"after_insert": "gia_events.api.create_project",
