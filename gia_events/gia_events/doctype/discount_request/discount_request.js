@@ -21,6 +21,19 @@ frappe.ui.form.on('Discount Request', {
 			frm.set_intro('');
 		}
 
+		frm.page.wrapper.on('blur', '.tags-input.form-control', function() {
+            setTimeout(update_lead_tags(frm), 300);
+        });
+		const update_lead_tags = (frm) => {
+			frappe.call({
+				method: "_add_tags_to_lead",
+				doc: frm.doc,
+				callback: function(r) {
+
+				}
+			});
+		};
+
 	}
 });
 

@@ -174,8 +174,11 @@ def get_lead(email):
 	return frappe.db.sql(sql, as_dict=1)
 
 def update_lead(lead, method):
+	ep('update_lead')
 	add_default_mail_groups(lead, method)
 
+def hello(a, b):
+	ep('hello')
 
 def add_default_mail_groups(lead, method):
 
@@ -507,44 +510,6 @@ def find_request_by_email(email):
 	""".format(email, email)
 	
 	return frappe.db.sql(sql, as_dict=1)
-
-
-# def add_discount_to_lead(discount):
-# 	ep('hello')
-# 	# find lead by email_id or second_email
-	
-# 	leads = get_lead(discount.corporate_email)
-# 	ep(f"leads {leads}")
-# 	if not leads:
-# 		# else of "if Lead is found" block, which is "if not leads" (Lead is NOT found)
-# 		# Find request
-# 		request = find_request_by_email(discount.corporate_email)
-# 		ep(f"request {request}")
-		
-# 		if not request:
-# 			# else of "Find request" block
-# 			# create lead as attendee
-# 			new_lead = create_lead_as_attendee(discount)
-# 			ep(f"Created new lead: {new_lead}")
-# 			return new_lead
-# 		else:
-# 			# If request is found, typically you'd do something with it, 
-# 			# but the logic provided only specifies what to do if a request is NOT found.
-# 			# Assuming for now we just return the request or handle it later.
-# 			ep(f"Found request: {request}")
-# 			return request
-	# else:
-	# 	# if Lead is found (i.e., leads is not empty)
-	# 	lead = leads[0] # Assuming get_lead returns a list and we work with the first one
-		
-	# 	# add discount tag
-	# 	add_tag_to_lead(lead, 'discount_applied') # Assuming a function for this exists
-		
-	# 	# enable email newsletter
-	# 	enable_newsletter_for_lead(lead) # Assuming a function for this exists
-		
-	# 	ep(f"Updated lead {lead.id} with discount tag and enabled newsletter.")
-	# 	return lead
 
 	
 def email_member(discount_request, method):
@@ -1735,7 +1700,7 @@ def update_tags_from_frm(lead, method=None):
 	
 	# set tags from import_tags
 	elif import_tags and not is_tagged:
-		ep(4)
+		# ep(4)
 		update_lead_tags_from_field(lead)
 		frappe.db.commit()
 	else:

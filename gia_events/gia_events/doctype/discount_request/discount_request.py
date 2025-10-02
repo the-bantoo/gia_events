@@ -6,6 +6,7 @@ from frappe.utils import getdate
 from gia_events.api import validate_industry
 from frappe.model.document import Document
 from gia_events.api import find_request_by_email
+from gia_events.api import update_lead_import_tags_field
 
 class DiscountRequest(Document):
 	@frappe.whitelist()
@@ -33,6 +34,31 @@ class DiscountRequest(Document):
 			return True
 		else:
 			return False
+
+	
+	@frappe.whitelist()
+	def _add_tags_to_lead(self):
+		""" creates relevant tags and adds them to the given lead if they arent already added """
+		if self.lead:
+			lead = frappe.get_doc("Lead", self.lead)		
+		else:
+			lead_name = get_lead(self.corporate_email)
+			if lead_name:
+				lead = frappe.get_doc("Lead", lead_name)
+			else:
+				return
+			
+		r_tags = self.get_tags()
+		if not r_tags or r_tags[0]=='': return
+
+		lead_tags = lead.get_tags()
+
+		for tag in r_tags:
+			if tag not in lead_tags:
+				lead.add_tag(tag)
+		
+		# update import_tags field in lead
+		update_lead_import_tags_field(lead)
 
 	def insert_lead(self):
 		fullname = self.full_name.split()

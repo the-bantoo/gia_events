@@ -345,6 +345,7 @@ fixtures = [
 				"name", "in", [
 					"Newsletter-Form",
 					"Lead-Form",
+					"Update Lead Tags",
 					"Call Log GIA-Form"
 				]
 			],
