@@ -1637,10 +1637,10 @@ def make_default_tags(lead):
 	# 3. Add creation year for all associated Requests
 	# Assuming there is a link field in 'Request' called 'lead'
 
-	for req in requests:
-	    creation_year = frappe.utils.getdate(req.creation).year
-	    if creation_year:
-	        default_tags.add(f"{req.type} {str(creation_year)}")
+	# for req in requests:
+	#     creation_year = frappe.utils.getdate(req.creation).year
+	#     if creation_year:
+	#         default_tags.add(f"{req.type} {str(creation_year)}")
 			
 	return list(default_tags)
 
