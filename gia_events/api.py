@@ -1951,7 +1951,7 @@ def set_empty_lead_tags():
 	
 	count = 0
 	for lead in leads:
-		update_tags_from_frm(lead.name)
+		update_tags_and_request_details(lead.name)
 		count += 1
 		if count >= 500: break
 
