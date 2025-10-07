@@ -1842,8 +1842,6 @@ def update_request_details(lead):
 	if update_data:
 		# Use a single database call for all compiled updates
 		frappe.db.set_value("Lead", lead.name, update_data, update_modified=False)
-		ep('r')
-		ep(update_data)
 		return "refresh"
 
 	return
