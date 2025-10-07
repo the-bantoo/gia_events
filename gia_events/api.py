@@ -11,6 +11,7 @@ from twilio.rest import Client
 import os
 from twilio.twiml.voice_response import Dial, VoiceResponse, Say
 from frappe.utils.password import get_decrypted_password
+from frappe.utils import getdate, now
 
 
 def p(*args):
@@ -677,7 +678,9 @@ def add_lead_to_request(request):
 						"terms_and_conditions": request.terms_conditions,
 						"data_consent": 1,
 						"first_request": request.creation,
-						# "last_request": request.modified
+						"first_request_entry": request.name,
+						"latest_request_date": request.creation,
+						"latest_request_entry": request.name
 					})
 					new_lead.insert(ignore_permissions=True)
 					
@@ -1650,6 +1653,205 @@ def tag_is_only_event_name(lead):
 	if lead.event and lead.import_tags:
 		return lead.event == lead.import_tags
 	return False
+
+@frappe.whitelist()
+def update_tags_and_request_details(lead, method=None):
+	update_tags_from_frm(lead)
+	check_refresh = update_request_details(lead)
+	frappe.db.commit()	
+	return check_refresh
+
+
+def get_first_and_last_requests(email, second_email=None):
+	emails_to_search = [email]
+
+	if second_email and second_email != email and second_email != '':
+		emails_to_search.append(second_email)
+
+	# Use a concise alias for the long select list
+	select_cols = "`name`, `creation`, `event_name`, `type`, `interest_type`, `phone_number`, `first_name`, `last_name`, `company`, `job_title`, `country`, `industry`, `address`, `city`, `source`, `terms_conditions`, `full_name`"
+
+	sql = f"""
+		(
+			-- Get the Newest (Most Recent) Entry
+			SELECT {select_cols}
+			FROM `tabRequest` T1
+			WHERE T1.`email_address` IN %s OR T1.`corporate_email` IN %s
+			ORDER BY T1.`creation` DESC
+			LIMIT 1
+		)
+		UNION ALL
+		(
+			-- Get the Oldest Entry
+			SELECT {select_cols}
+			FROM `tabRequest` T1
+			WHERE (T1.`email_address` IN %s OR T1.`corporate_email` IN %s)
+			-- Find the absolute MIN creation time for the given emails
+			AND T1.`creation` = (
+				SELECT MIN(T2.`creation`)
+				FROM `tabRequest` T2
+				WHERE (T2.`email_address` IN %s OR T2.`corporate_email` IN %s)
+			)
+			-- Add a condition to prevent selecting the same record twice
+			-- if only one request exists (i.e., min(creation) == max(creation))
+			AND T1.`name` != (
+				SELECT T3.`name`
+				FROM `tabRequest` T3
+				WHERE (T3.`email_address` IN %s OR T3.`corporate_email` IN %s)
+				ORDER BY T3.`creation` DESC
+				LIMIT 1
+			)
+			LIMIT 1
+		)
+		ORDER BY `creation` DESC
+	"""
+
+	# We repeat the tuple to fill all the %s placeholders (2 * 4 = 8 total)
+	params = (
+		emails_to_search, emails_to_search, # Newest SELECT
+		emails_to_search, emails_to_search, # Oldest SELECT outer
+		emails_to_search, emails_to_search, # Oldest SELECT MIN subquery
+		emails_to_search, emails_to_search  # Oldest SELECT NOT EQUAL subquery
+	)
+
+	results = frappe.db.sql(sql, params, as_dict=1)
+	return results
+
+
+def update_request_details(lead):
+	"""
+	Updates the Lead document with details from the newest and oldest related Request documents.
+	Consolidates updates for missing core fields and tracks first/latest requests.
+	Updates missing core fields one by one on condition (only if the field is empty).
+	"""
+	# Get the Lead object if only the name is passed
+	if isinstance(lead, str):
+		lead = frappe.get_doc("Lead", lead)
+
+	# Retrieves the newest request at index [0] and the oldest at index [-1]
+	requests = get_first_and_last_requests(lead.email_id, lead.second_email)
+
+	# Dictionary to hold all fields that need updating
+	update_data = {}
+
+	if requests:
+		latest_req = requests[0]
+		first_req = requests[-1] # This is the oldest request, even if there's only one.
+
+		# --- 1. Granular Logic: Populate missing fields from the newest request one by one ---
+		
+		# event_name (Lead.event)
+		if not lead.event and latest_req.event_name:
+			update_data["event"] = latest_req.event_name
+			
+		# type (Lead.type)
+		if not lead.type and latest_req.type:
+			update_data["type"] = latest_req.type
+			
+		# interest_type (Lead.request_type)
+		if not lead.request_type and latest_req.interest_type:
+			update_data["request_type"] = latest_req.interest_type
+			
+		# phone_number (Lead.phone and Lead.lead_number)
+		if not lead.phone and latest_req.phone_number:
+			update_data["phone"] = latest_req.phone_number
+			update_data["lead_number"] = latest_req.phone_number
+			
+		# first_name (Lead.first_name)
+		if not lead.first_name and latest_req.first_name:
+			update_data["first_name"] = latest_req.first_name
+			
+		# last_name (Lead.last_name)
+		if not lead.last_name and latest_req.last_name:
+			update_data["last_name"] = latest_req.last_name
+			
+		# company (Lead.company_name)
+		if not lead.company_name and latest_req.company:
+			update_data["company_name"] = latest_req.company
+			
+		# job_title (Lead.job_title)
+		if not lead.job_title and latest_req.job_title:
+			update_data["job_title"] = latest_req.job_title
+			
+		# full_name (Lead.lead_name)
+		if not lead.lead_name and latest_req.full_name:
+			update_data["lead_name"] = latest_req.full_name
+			
+		# country (Lead.country)
+		if not lead.country and latest_req.country:
+			update_data["country"] = latest_req.country
+			
+		# industry (Lead.industry) - requires validation
+		if not lead.industry and latest_req.industry:
+			# Assuming validate_industry is defined and available
+			validated_industry = validate_industry(latest_req.industry)
+			if validated_industry:
+				update_data["industry"] = validated_industry
+			
+		# address (Lead.address)
+		if not lead.address and latest_req.address:
+			update_data["address"] = latest_req.address
+			
+		# city (Lead.city)
+		if not lead.city and latest_req.city:
+			update_data["city"] = latest_req.city
+			
+		# source (Lead.source)
+		if not lead.source and latest_req.source:
+			update_data["source"] = latest_req.source
+
+		# unsubscribed (Lead.unsubscribed)
+		if not lead.unsubscribed and hasattr(latest_req, 'newsletter') and latest_req.newsletter == 0:
+			update_data["unsubscribed"] = 1
+			
+		# terms_conditions (Lead.terms_and_conditions)
+		if not lead.terms_and_conditions and latest_req.terms_conditions:
+			update_data["terms_and_conditions"] = latest_req.terms_conditions
+			
+		# data_consent (Lead.data_consent)
+		# Assuming data consent should be marked if the lead is created from a request, and it's not already set
+		if not lead.data_consent:
+			update_data["data_consent"] = 1
+
+
+		# --- 2. Request History Logic: Conditionally update first/latest request details ---
+
+		# Latest Request Details
+		# Compare dates as strings for robust comparison (handles datetime/date/string fields)
+		# Latest Request Details (Expanded condition)
+		latest_req_date = getdate(latest_req.creation)
+		
+		# Update if the field is empty OR if the lead's date (normalized) does not match the latest request date
+		if not lead.latest_request_date or getdate(lead.latest_request_date) != latest_req_date:
+			update_data["latest_request_date"] = latest_req_date
+		
+		if lead.latest_request_entry != latest_req.name:
+			update_data["latest_request_entry"] = latest_req.name
+
+		# First Request Details (Expanded condition)
+		first_req_date = getdate(first_req.creation)
+		
+		# Update if the field is empty OR if the lead's date (normalized) does not match the first request date
+		if not lead.first_request or getdate(lead.first_request) != first_req_date:
+			update_data["first_request"] = first_req_date
+
+		if lead.first_request_entry != first_req.name:
+			update_data["first_request_entry"] = first_req.name
+			
+	# Final database write: Only execute set_value if update_data contains any changes
+	if update_data:
+		# Use a single database call for all compiled updates
+		frappe.db.set_value("Lead", lead.name, update_data, update_modified=False)
+		ep('r')
+		ep(update_data)
+		return "refresh"
+
+	return
+
+	
+
+
+
 
 @frappe.whitelist()
 def update_tags_from_frm(lead, method=None):

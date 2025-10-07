@@ -2,6 +2,20 @@
  {
   "docstatus": 0,
   "doctype": "Industry Type",
+  "industry": "Food & Beverages",
+  "modified": "2022-01-26 07:47:46.944521",
+  "name": "Food & Beverages"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Consumer Products / Packaged Goods",
+  "modified": "2022-12-16 11:38:23.841892",
+  "name": "Consumer Products / Packaged Goods"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
   "industry": "Accounting",
   "modified": "2022-01-25 04:50:11.995731",
   "name": "Accounting"
@@ -544,5 +558,12 @@
   "industry": "Oil & Gas",
   "modified": "2022-01-26 07:47:46.949250",
   "name": "Oil & Gas"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Industry Type",
+  "industry": "Not Captured",
+  "modified": "2022-12-10 06:01:40.869886",
+  "name": "Not Captured"
  }
 ]

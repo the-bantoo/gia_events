@@ -261,6 +261,11 @@ fixtures = [
 					"Lead-segmentation_status",
 					"Lead-deal_value",
 					"Lead-event",
+					"Lead-latest_request_entry",
+					"Lead-latest_request_entry_date",
+					"Lead-column_break_tkni4",
+					"Lead-first_request_entry",
+					"Lead-request_details",
 					"Sales Invoice-event",
 					"Email Group-event",
 					"Email Group-hidden",
@@ -273,8 +278,7 @@ fixtures = [
 					"ToDo-subject",
 					"Communication-gia",
 					"Communication-newsletter",
-					"Communication-communication_status",
-					"Communication-email_links"
+					"Communication-communication_status"
 				]
 			],
 		]
@@ -328,9 +332,6 @@ fixtures = [
 			],
 		]
 
-	},
-	{
-		"dt": "Tag"
 	},
 	{
 		"dt": "Email Template"
