@@ -264,6 +264,7 @@ fixtures = [
 					"Lead-latest_request_entry",
 					"Lead-latest_request_date",
 					"Lead-column_break_tkni4",
+					"Lead-first_request",
 					"Lead-first_request_entry",
 					"Lead-request_details",
 					"Sales Invoice-event",
@@ -284,6 +285,14 @@ fixtures = [
 		]
 
 	},
+	# {
+    #     "doctype": "Property Setter",
+    #     "filters": {
+    #         "doc_type": ["in", [
+    #             "Lead",
+	# 		]
+	# 	]}
+	# },
 	{
 		"dt": "Workspace",
 		"filters": [
