@@ -654,9 +654,11 @@ def add_lead_to_request(request):
 					lead = frappe.get_doc("Lead", leads[0].name)
 					lead.add_tag(request.event_name)
 				else:
+					project_name = get_or_create_project(None, request.event_name)
 					new_lead = frappe.get_doc({
 						"doctype": "Lead",
 						"event": request.event_name,
+						"project": project_name,
 						"first_name": request.first_name,
 						"last_name": request.last_name,
 						"lead_name": request.full_name,
@@ -774,6 +776,7 @@ def verify(request, method):
 		#doc.mobile_number = request.phone_number
 		doc.phone = request.phone_number
 		doc.company_name = request.company
+		doc.project = update_lead_project(doc.name, request.event_name)
 
 		doc.save()
 
@@ -1655,13 +1658,48 @@ def tag_is_only_event_name(lead):
 	return False
 
 @frappe.whitelist()
-def update_tags_and_request_details(lead, method=None):
+def update_tags_and_request_details(lead, project=None, event=None, method=None):
 	update_tags_from_frm(lead)
 	check_refresh = update_request_details(lead)
-	frappe.db.commit()	
+	if not project:
+		update_lead_project(lead, event)
+		check_refresh = "refresh"
+		
+	if check_refresh == "refresh":
+		frappe.db.commit()
+
 	return check_refresh
 
+def update_lead_project(lead, event=None):
 
+	if type(lead) is not str:
+		lead = lead.name
+
+	prj = get_or_create_project(lead, event)
+	frappe.db.set_value("Lead", lead, "project", prj)
+
+def get_or_create_project(lead=None, event=None):
+	if not lead and not event: return
+
+	project = None
+	if not event:
+		lead_doc = frappe.get_doc("Lead", lead)
+		requests = get_request(lead_doc.email_id, lead_doc.second_email)
+		event = requests[0].event_name
+
+	projects = frappe.get_all("Project", filters={"project_name": event}, fields=['name'], limit=1)
+	if len(projects) < 1:
+		new_project = frappe.get_doc({
+			"doctype": "Project",
+			"project_name": event.event_name,
+			"project_type": "Event"
+			})
+		new_project.insert(ignore_permissions=True)
+		project = new_project.name
+	else:
+		project = projects[0].name
+	return project
+	
 def get_first_and_last_requests(email, second_email=None):
 	emails_to_search = [email]
 
@@ -1944,14 +1982,14 @@ def set_empty_lead_tags():
 	skipped = 0
 	updated = 0
 
-	leads = frappe.get_all("Lead", filters={'import_tags': ['is', 'not set']}, fields=["name"], order_by="modified asc", limit=0)
+	leads = frappe.get_all("Lead", filters={'import_tags': ['is', 'not set']}, fields=["name", "project", "event"], order_by="modified asc", limit=0)
 	total = len(leads)
 	
 	count = 0
 	for lead in leads:
-		update_tags_and_request_details(lead.name)
+		update_tags_and_request_details(lead.name, lead.project, lead.event)
 		count += 1
-		if count >= 500: break
+		if count >= 1: break
 
 	bal = total - count
 	return [total, count, bal]

@@ -262,7 +262,7 @@ fixtures = [
 					"Lead-deal_value",
 					"Lead-event",
 					"Lead-latest_request_entry",
-					"Lead-latest_request_entry_date",
+					"Lead-latest_request_date",
 					"Lead-column_break_tkni4",
 					"Lead-first_request_entry",
 					"Lead-request_details",
