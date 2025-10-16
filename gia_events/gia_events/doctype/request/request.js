@@ -8,6 +8,7 @@ frappe.ui.form.on('Request', {
             setTimeout(update_lead_tags(frm), 300);
         });
 		const update_lead_tags = (frm) => {
+            if(!frm.doc.lead){return;}
 			frappe.call({
 				method: "add_tags_to_lead",
 				doc: frm.doc,

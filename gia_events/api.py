@@ -676,7 +676,7 @@ def add_lead_to_request(request):
 						"address": request.address,
 						"city": request.city,
 						"source": request.source,
-						"unsubscribed": 1 if request.newsletter == 0 else 0,
+						"blog_subscriber": 1 if request.newsletter == 0 else 0,
 						"terms_and_conditions": request.terms_conditions,
 						"data_consent": 1,
 						"first_request": request.creation,
@@ -1578,7 +1578,7 @@ def make_default_tags(lead):
 				"address": r.address,
 				"city": r.city,
 				"source": r.source,
-				"unsubscribed": 1 if r.newsletter == 0 else 0,
+				"blog_subscriber": r.newsletter,
 				"terms_and_conditions": r.terms_conditions,
 				"data_consent": 1,
 			}, update_modified=False)
@@ -1644,6 +1644,27 @@ def get_request(email, second_email=None):
     return results
 
 
+def sync_request_tags():
+	""" sync tags from requests to lead doc
+	- get all leads
+	- for each lead, get all requests
+	- for each request, get tags
+	- add to lead
+
+	using sql:
+	- get all leads, for each
+		- not updated today
+		- get latest request with same event and its tags with sql 
+		- right join the request table on email, and event
+		- join tags
+	- must be unique
+	- for each
+	
+	"""
+
+	pass
+
+
 def update_tags_hook():
 	if import_tags and not (current_tags or current_tags[0]==''):
 		tag_lead(lead)
@@ -1656,6 +1677,7 @@ def tag_is_only_event_name(lead):
 	if lead.event and lead.import_tags:
 		return lead.event == lead.import_tags
 	return False
+	
 
 @frappe.whitelist()
 def update_tags_and_request_details(lead, project=None, event=None, method=None):
@@ -1837,10 +1859,6 @@ def update_request_details(lead):
 		# source (Lead.source)
 		if not lead.source and latest_req.source:
 			update_data["source"] = latest_req.source
-
-		# unsubscribed (Lead.unsubscribed)
-		if not lead.unsubscribed and hasattr(latest_req, 'newsletter') and latest_req.newsletter == 0:
-			update_data["unsubscribed"] = 1
 			
 		# terms_conditions (Lead.terms_and_conditions)
 		if not lead.terms_and_conditions and latest_req.terms_conditions:
