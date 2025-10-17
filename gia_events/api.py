@@ -676,7 +676,7 @@ def add_lead_to_request(request):
 						"address": request.address,
 						"city": request.city,
 						"source": request.source,
-						"blog_subscriber": 1 if request.newsletter == 0 else 0,
+						"blog_subscriber": 1 if request.newsletter == 1 else 0,
 						"terms_and_conditions": request.terms_conditions,
 						"data_consent": 1,
 						"first_request": request.creation,
@@ -1578,7 +1578,7 @@ def make_default_tags(lead):
 				"address": r.address,
 				"city": r.city,
 				"source": r.source,
-				"blog_subscriber": r.newsletter,
+				"blog_subscriber": r.newsletter if r.newsletter else 0,
 				"terms_and_conditions": r.terms_conditions,
 				"data_consent": 1,
 			}, update_modified=False)
@@ -1629,7 +1629,7 @@ def get_request(email, second_email=None):
     # SQL IN clause format (e.g., ('email1@example.com', 'email2@example.com')).
     sql = """
         SELECT `name`, `creation`, `event_name`, `type`, `event_name`, `type`, `interest_type`, `phone_number`, `first_name`, `last_name`, `company`, `job_title`,
-				`country`, `industry`, `address`, `city`, `source`, `terms_conditions`, `full_name`
+				`country`, `industry`, `address`, `city`, `source`, `terms_conditions`, `full_name`, `newsletter`
         FROM `tabRequest`
         WHERE `email_address` IN %s
         ORDER BY `creation` DESC
@@ -1642,27 +1642,32 @@ def get_request(email, second_email=None):
     
     # The function already returns the results from the query
     return results
-
-
-def sync_request_tags():
-	""" sync tags from requests to lead doc
-	- get all leads
-	- for each lead, get all requests
-	- for each request, get tags
-	- add to lead
-
-	using sql:
-	- get all leads, for each
-		- not updated today
-		- get latest request with same event and its tags with sql 
-		- right join the request table on email, and event
-		- join tags
-	- must be unique
-	- for each
 	
-	"""
 
-	pass
+@frappe.whitelist()
+def sync_request_tags():
+    """
+    Triggers the sync_request_tags function to run asynchronously via the worker.
+    """
+    frappe.enqueue('gia_events.api.bg_sync_request_tags', queue='default')
+    frappe.msgprint("Sync is running in the background", indicator="blue", alert=True)
+
+
+def bg_sync_request_tags():
+	leads = frappe.get_all("Lead", fields=["name", "lead_name", "latest_request_entry"],
+		order_by="modified asc",  limit=5)
+
+	for lead in leads:
+		if not lead.latest_request_entry:
+			update_request_details(lead.name)
+			ep(1)
+		else:
+			add_request_tags_to_lead(lead.name, lead.latest_request_entry)
+			ep(2)
+		ep(f'updated: {lead.name}: {lead.lead_name}')
+		frappe.log_error(f'updated: {lead.name}: {lead.lead_name}')
+
+
 
 
 def update_tags_hook():
@@ -1797,10 +1802,7 @@ def update_request_details(lead):
 	if requests:
 		latest_req = requests[0]
 		first_req = requests[-1] # This is the oldest request, even if there's only one.
-
-		# --- 1. Granular Logic: Populate missing fields from the newest request one by one ---
 		
-		# event_name (Lead.event)
 		if not lead.event and latest_req.event_name:
 			update_data["event"] = latest_req.event_name
 			
@@ -1893,17 +1895,26 @@ def update_request_details(lead):
 
 		if lead.first_request_entry != first_req.name:
 			update_data["first_request_entry"] = first_req.name
+		
+		# add request tags
+		add_request_tags_to_lead(lead=lead.name, request=latest_req.name)
 			
 	# Final database write: Only execute set_value if update_data contains any changes
 	if update_data:
 		# Use a single database call for all compiled updates
 		frappe.db.set_value("Lead", lead.name, update_data, update_modified=False)
 		return "refresh"
-
 	return
 
-	
+def add_request_tags_to_lead(lead, request):
+	lead_doc = frappe.get_doc("Lead", lead)
+	req_doc = frappe.get_doc("Request", request)
 
+	lead_tags = lead_doc.get_tags()
+
+	for tag in req_doc.get_tags():
+		if tag not in lead_tags:
+			lead_doc.add_tag(tag)
 
 
 
@@ -1992,6 +2003,30 @@ def update_lead_import_tags_field(lead):
 	tag_string = get_tags_as_str(lead)
 	frappe.db.set_value("Lead", lead.name, "import_tags", tag_string) #, update_modified=False)
 
+def get_incomplete_leads():
+	# The SQL query to select name, project, and event where import_tags is NULL.
+	sql_query = """
+		SELECT
+			name,
+			project,
+			event
+		FROM
+			tabLead
+		WHERE
+			import_tags IS NULL OR
+			first_request IS NULL OR
+			project IS NULL
+		ORDER BY
+			modified DESC
+	"""
+
+	# Execute the query. The 'as_list=True' (default) returns a list of tuples/lists.
+	# We use 'as_dict=1' here for a more convenient list of dictionaries, 
+	# which is similar to what frappe.get_all returns by default.
+	leads = frappe.db.sql(sql_query, as_dict=1)
+
+	return leads
+
 
 # gets all leads then updates lead.import_tags field if its not equal to the tags on the doctype
 @frappe.whitelist(allow_guest=True)
@@ -2000,7 +2035,7 @@ def set_empty_lead_tags():
 	skipped = 0
 	updated = 0
 
-	leads = frappe.get_all("Lead", filters={'import_tags': ['is', 'not set']}, fields=["name", "project", "event"], order_by="modified asc", limit=0)
+	leads = get_incomplete_leads()
 	total = len(leads)
 	
 	count = 0

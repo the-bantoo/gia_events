@@ -9,6 +9,7 @@ class Request(Document):
 	def on_update(self):
 		self.add_tags_to_lead()
 
+
 	@frappe.whitelist()
 	def add_tags_to_lead(self):
 		""" creates relevant tags and adds them to the given lead if they arent already added """
@@ -21,7 +22,8 @@ class Request(Document):
 			else:
 				return
 			
-		r_tags = self.get_tags()
+		r_tags = get_tags(self.doctype, self.name)
+		
 		if not r_tags or r_tags[0]=='': return
 
 		lead_tags = lead.get_tags()
@@ -78,3 +80,6 @@ class Request(Document):
 # 	})
 
 # 	all_email_group_member.save()
+
+def get_tags(doc, name):
+		return frappe.get_all("Tag Link", fields=["tag"], filters={'document_type': doc, 'document_name': name}, limit=0, pluck='tag')

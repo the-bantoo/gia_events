@@ -7,6 +7,7 @@ from gia_events.api import validate_industry
 from frappe.model.document import Document
 from gia_events.api import find_request_by_email
 from gia_events.api import update_lead_import_tags_field
+from gia_events.gia_events.doctype.request.request import get_tags
 
 class DiscountRequest(Document):
 	@frappe.whitelist()
@@ -48,7 +49,7 @@ class DiscountRequest(Document):
 			else:
 				return
 			
-		r_tags = self.get_tags()
+		r_tags = get_tags(self.doctype, self.name)
 		if not r_tags or r_tags[0]=='': return
 
 		lead_tags = lead.get_tags()
@@ -77,7 +78,7 @@ class DiscountRequest(Document):
 			'last_name': l_name,
 			"type": "Attendee",
 			"request_type": "Attending",
-			"blog_subscriber": self.newsletter,
+			"blog_subscriber": self.newsletter if self.newsletter else 0,
 			"unsubscribed": 0,
 			"terms_and_conditions": 1,
 			"data_consent": 1,
