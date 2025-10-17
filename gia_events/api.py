@@ -1655,18 +1655,13 @@ def sync_request_tags():
 
 def bg_sync_request_tags():
 	leads = frappe.get_all("Lead", fields=["name", "lead_name", "latest_request_entry"],
-		order_by="modified asc",  limit=5)
+		order_by="modified asc",  limit=0)
 
 	for lead in leads:
 		if not lead.latest_request_entry:
 			update_request_details(lead.name)
-			ep(1)
 		else:
 			add_request_tags_to_lead(lead.name, lead.latest_request_entry)
-			ep(2)
-		ep(f'updated: {lead.name}: {lead.lead_name}')
-		frappe.log_error(f'updated: {lead.name}: {lead.lead_name}')
-
 
 
 
@@ -1934,15 +1929,6 @@ def update_tags_from_frm(lead, method=None):
 	tags_are_updated = tags_field_is_updated(import_tags, current_tags)
 	tag_is_just_event_name = tag_is_only_event_name(lead)
 
-
-	# ep('-------')
-	# ep(f'{lead.name} - {lead.lead_name}')
-	# ep(f'is_tagged {is_tagged}')
-	# ep(f'tags_are_updated {tags_are_updated}')
-	# ep(f'event {lead.event}')
-	# ep(f'import_tags {import_tags}')
-	# ep(f'tag_is_only_event_name {tag_is_just_event_name}')
-
 	# if tags are fine, discontinue
 	if (is_tagged and tags_are_updated) and not tag_is_just_event_name:
 		# ep(1)
@@ -2042,7 +2028,7 @@ def set_empty_lead_tags():
 	for lead in leads:
 		update_tags_and_request_details(lead.name, lead.project, lead.event)
 		count += 1
-		if count >= 1: break
+		if count >= 500: break
 
 	bal = total - count
 	return [total, count, bal]
