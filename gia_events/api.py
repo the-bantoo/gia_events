@@ -759,7 +759,6 @@ def verify(request, method):
 		
 	if request.workflow_state == 'Merged':
 		#Update the lead:
-		# ep("Update the lead")
 		
 		doc = frappe.get_doc('Lead', request.lead)
 
@@ -776,9 +775,10 @@ def verify(request, method):
 		#doc.mobile_number = request.phone_number
 		doc.phone = request.phone_number
 		doc.company_name = request.company
-		doc.project = update_lead_project(doc.name, request.event_name)
-
+		
 		doc.save()
+		if not doc.project or doc.project != request.event_name:
+			update_lead_project(doc.name, request.event_name)
 
 		#Update the contact entry:
 		contacts = frappe.get_all('Contact', filters={'email_id': request.email_address}, fields=['name'])
