@@ -1698,6 +1698,9 @@ def update_lead_project(lead, event=None):
 		lead = lead.name
 
 	prj = get_or_create_project(lead, event)
+	if not prj:
+		frappe.msgprint(f"Cant find Request or Event for Lead {lead}", indicator="yellow", alert=True)
+		return
 	frappe.db.set_value("Lead", lead, "project", prj)
 
 def get_or_create_project(lead=None, event=None):
@@ -1707,7 +1710,9 @@ def get_or_create_project(lead=None, event=None):
 	if not event:
 		lead_doc = frappe.get_doc("Lead", lead)
 		requests = get_request(lead_doc.email_id, lead_doc.second_email)
-		event = requests[0].event_name
+		if len(requests) == 0 or requests[0].event_name:
+			return
+		event = requests[0].event_name		
 
 	projects = frappe.get_all("Project", filters={"project_name": event}, fields=['name'], limit=1)
 	if len(projects) < 1:
